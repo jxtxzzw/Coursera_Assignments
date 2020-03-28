@@ -1,0 +1,410 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!-- saved from url=(0076)https://coursera.cs.princeton.edu/algs4/assignments/queues/specification.php -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./specification_files/assignments.css">
+    <link rel="stylesheet" type="text/css" href="./specification_files/link-icons.css">
+    <script type="text/javascript" src="./specification_files/MathJax.js.下载"></script>
+    <title>Programming Assignment 2: Queues</title>
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body class="specification"><div id="MathJax_Message" style="display: none;"></div>
+
+
+<div id="nav2">
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/queues/specification.php" id="logo"> <img src="./specification_files/logo.png"> Queues</a>
+<ul id="links">
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/queues/specification.php" id="here">Spec</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/queues/faq.php">FAQ</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/queues/queues.zip">Project</a></li>
+<li><a href="https://www.coursera.org/learn/algorithms-part1/programming/zamjZ/deques-and-randomized-queues/submission" target="_blank">Submit</a></li>
+</ul>
+</div>
+
+Write a generic data type for a deque and a randomized queue.
+The goal of this assignment is to implement elementary data structures
+using arrays and linked lists, and to introduce you to generics and
+iterators.
+
+
+<p>
+<b>Dequeue.</b>
+A <em>double-ended queue</em> or <em>deque</em> (pronounced “deck”)
+is a generalization of a 
+stack and a queue that supports adding and removing items 
+from either the front or the back of the data structure.
+Create a generic data type <code>Deque</code> that implements the following API:
+
+</p><blockquote>
+<pre class="api">public class Deque&lt;Item&gt; implements Iterable&lt;Item&gt; {
+
+    <span class="comment">// construct an empty deque</span>
+    public Deque()
+
+    <span class="comment">// is the deque empty?</span>
+    public boolean isEmpty()
+
+    <span class="comment">// return the number of items on the deque</span>
+    public int size()
+
+    <span class="comment">// add the item to the front</span>
+    public void addFirst(Item item)
+
+    <span class="comment">// add the item to the back</span>
+    public void addLast(Item item)
+
+    <span class="comment">// remove and return the item from the front</span>
+    public Item removeFirst()
+
+    <span class="comment">// remove and return the item from the back</span>
+    public Item removeLast()
+
+    <span class="comment">// return an iterator over items in order from front to back</span>
+    public Iterator&lt;Item&gt; iterator()
+
+    <span class="comment">// unit testing (required)</span>
+    public static void main(String[] args)
+
+}
+</pre>
+</blockquote>
+
+<p><em>Corner cases.&nbsp;</em>
+Throw the specified exception for the following corner cases:
+</p><ul>
+<li>Throw an <code>IllegalArgumentException</code>
+if the client calls either <code>addFirst()</code> or <code>addLast()</code>
+with a <code>null</code> argument.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code>
+if the client calls either <code>removeFirst()</code> or <code>removeLast</code>
+when the deque is empty.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code> if the client calls the <code>next()</code>
+method in the iterator when there are no more items to return.
+</li><li>
+Throw an <code>UnsupportedOperationException</code> if the client calls
+the <code>remove()</code> method in the iterator.
+</li></ul>
+
+<p><em>Unit testing.&nbsp;</em>
+Your <code>main()</code> method must call directly every public constructor and method
+to help verify that they work as prescribed (e.g., by printing results to standard output).
+
+</p><p><em>Performance requirements.&nbsp;</em>
+Your deque implementation must support each deque operation (including construction)
+in <em>constant worst-case time</em>.
+A deque containing <em>n</em> items must use at most 48<em>n</em> + 192 bytes of memory.
+Additionally, your iterator implementation must support
+each operation (including construction) in <em>constant worst-case time</em>.
+
+</p><p><b>Randomized queue.</b>
+A <em>randomized queue</em> is similar to a stack or queue, except that
+the item removed is chosen uniformly at random among items in
+the data structure.
+Create a generic data type <code>RandomizedQueue</code>
+that implements the following API:
+
+</p><blockquote>
+<pre class="api">public class RandomizedQueue&lt;Item&gt; implements Iterable&lt;Item&gt; {
+
+    <span class="comment">// construct an empty randomized queue</span>
+    public RandomizedQueue()
+
+    <span class="comment">// is the randomized queue empty?</span>
+    public boolean isEmpty()
+
+    <span class="comment">// return the number of items on the randomized queue</span>
+    public int size()
+
+    <span class="comment">// add the item</span>
+    public void enqueue(Item item)
+
+    <span class="comment">// remove and return a random item</span>
+    public Item dequeue()
+
+    <span class="comment">// return a random item (but do not remove it)</span>
+    public Item sample()
+
+    <span class="comment">// return an independent iterator over items in random order</span>
+    public Iterator&lt;Item&gt; iterator()
+
+    <span class="comment">// unit testing (required)</span>
+    public static void main(String[] args)
+
+}
+</pre>
+</blockquote>
+
+<p><em>Iterator</em>.&nbsp;
+Each iterator must return the items in uniformly random order.
+The order of two or more iterators to the same randomized queue must be
+<em>mutually independent</em>; each iterator must maintain its own random order.
+
+</p><p><em>Corner cases.&nbsp;</em>
+Throw the specified exception for the following corner cases:
+</p><ul>
+<li>
+Throw an <code>IllegalArgumentException</code> if the client calls
+<code>enqueue()</code> with a <code>null</code> argument.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code>
+if the client calls either <code>sample()</code> or 
+<code>dequeue()</code> when the randomized queue is empty.
+</li><li>
+Throw a <code>java.util.NoSuchElementException</code> if the client calls the <code>next()</code>
+method in the iterator when there are no more items to return.
+</li><li>
+Throw an <code>UnsupportedOperationException</code> if the client calls
+the <code>remove()</code> method in the iterator.
+</li></ul>
+
+<p><em>Unit testing.&nbsp;</em>
+Your <code>main()</code> method must call directly every public constructor and method to
+verify that they work as prescribed (e.g., by printing results to standard output).
+
+</p><p><em>Performance requirements.&nbsp;</em>
+Your randomized queue implementation must support each randomized queue operation   
+(besides creating an iterator) in <em>constant amortized time</em>.
+That is, any intermixed sequence of <em>m</em> randomized queue operations (starting from
+an empty queue) must take at most <em>cm</em> steps in the worst case,
+for some constant <em>c</em>.
+A randomized queue containing <em>n</em> items must use at most
+48<em>n</em> + 192 bytes of memory.
+Additionally, your iterator implementation must support
+operations <code>next()</code> and <code>hasNext()</code> in <em>constant worst-case time</em>;
+and construction in <em>linear time</em>; you may (and will need to) use a
+linear amount of extra memory per iterator.
+
+
+</p><p>
+<b>Client.</b>
+Write a client program <code>Permutation.java</code> that takes an integer <em>k</em> as
+a command-line argument; reads a sequence of strings from standard input
+using <code>StdIn.readString()</code>; and prints exactly <em>k</em> of them,
+uniformly at random.
+Print each item from the sequence at most once.
+
+</p><blockquote>
+<table width="cellspacing=&quot;0&quot;" cellpadding="0" border="0" bgcolor="#FFFFFF">
+
+<tbody><tr>
+<td valign="top">
+<pre class="terminal"><span class="prompt">~/Desktop/queues&gt;</span> <span class="command">cat distinct.txt</span>
+A B C D E F G H I
+
+<span class="prompt">~/Desktop/queues&gt;</span> <span class="command">java Permutation 3 &lt; distinct.txt</span>
+C
+G
+A
+
+<span class="prompt">~/Desktop/queues&gt;</span> <span class="command">java Permutation 3 &lt; distinct.txt</span>
+E
+F
+G
+</pre>
+</td>
+
+<td valign="top">
+<pre class="terminal"><span class="prompt">~/Desktop/queues&gt;</span> <span class="command">cat duplicates.txt</span>
+AA BB BB BB BB BB CC CC
+
+<span class="prompt">~/Desktop/queues&gt;</span> <span class="command">java Permutation 8 &lt; duplicates.txt</span>
+BB
+AA
+BB
+CC
+BB
+BB
+CC
+BB
+</pre>
+</td>
+</tr>
+</tbody></table>
+</blockquote>
+
+
+<p>
+Your program must implement the following API:
+
+</p><blockquote>
+<pre class="api">public class Permutation {
+   public static void main(String[] args)
+}
+</pre>
+</blockquote>
+
+<p><em>Command-line argument.&nbsp;</em>
+You may assume that 0 ≤ <em>k</em> ≤ <em>n</em>,
+where <em>n</em> is the number of string on standard input. 
+Note that you are not given <em>n</em>.
+
+</p><p><em>Performance requirements.&nbsp;</em>
+The running time of <code>Permutation</code> must be linear in the size of the input.
+<!-- not necessarily linear in n because the strings could be very long -->
+You may use only a constant amount of memory plus either 
+one <code>Deque</code> or <code>RandomizedQueue</code> object of maximum size at most <em>n</em>.
+(For an extra challenge and a small amount of extra credit,
+use only one <code>Deque</code> or <code>RandomizedQueue</code>
+object of maximum size at most <em>k</em>.)
+
+
+</p><p><b>Web submission.</b>
+Submit a .zip file containing only
+<code>RandomizedQueue.java</code>, <code>Deque.java</code>, and
+<code>Permutation.java</code>.
+Your submission may not call library functions except those in
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StdIn.html"><code>StdIn</code></a>,
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StdOut.html"><code>StdOut</code></a>,
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/StdRandom.html"><code>StdRandom</code></a>,
+<a href="http://docs.oracle.com/javase/8/docs/api/java/lang/package-summary.html"><code>java.lang</code></a>,
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html"><code>java.util.Iterator</code></a>,
+and
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/NoSuchElementException.html"><code>java.util.NoSuchElementException</code>
+</a>.
+
+In particular, do not use either 
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html"><code>java.util.LinkedList</code></a>
+or
+<a href="http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html"><code>java.util.ArrayList</code></a>.
+
+
+
+</p><p><br>
+
+
+</p><address><small>
+This assignment was developed by Bob Sedgewick and Kevin Wayne.
+<br>Copyright © 2005.
+</small>
+</address>
+
+
+</body><style id="stylus-8" type="text/css" class="stylus">::-webkit-scrollbar{width:6px!important;height:6px!important;}
+body::-webkit-scrollbar{width:6 px!important;height:6px!important;}
+
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.22)!important;border-radius:8px!important;}
+
+
+::-webkit-scrollbar-thumb{background-color:#343434 !important;min-height:50px;border-radius:5px!important;}
+
+
+@keyframes fadein {
+0% {opacity: 0;}
+100% {}
+}
+
+body {
+animation-name: fadein;
+animation-duration: 0.4s;
+}scrollbar *
+  scrollbar scrollbarbutton{visibility:collapse!important;}
+  scrollbar scrollbarbutton{display:none!important;}
+ 
+  scrollbar[orient="vertical"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;min-width:2px!important;max-width:2px!important;border-radius:5px;}
+  scrollbar[orient="vertical"]:hover{-moz-appearance:none!important;}
+  scrollbar thumb[orient="vertical"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:25px!important;min-width:2px!important;max-width:2px!important;border:1px!important;opacity:0.87;}
+  scrollbar thumb[orient="vertical"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+  
+  scrollbar[orient="horizontal"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;background-color:transparent!important;opacity:.75!important;min-height:2px!important;max-height:9px!important;border-radius:5px;}
+  scrollbar[orient="horizontal"]:hover{-moz-appearance:none!important;background-color:transparent!important;min-height:9px!important;max-height:9px!important}
+  scrollbar thumb[orient="horizontal"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:7px!important;max-height:7px!important;border:1px!important;margin-left:0px!important;opacity:0.87;}
+  scrollbar thumb[orient="horizontal"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+
+scrollcorner{opacity:0!important}
+scrollbar scrollcorner:hover{background:transparent!important}</style></html>

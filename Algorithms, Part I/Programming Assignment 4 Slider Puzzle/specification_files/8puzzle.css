@@ -1,0 +1,131 @@
+.container {
+  margin: 40px auto;
+  width: 290px;
+  text-align: center;
+  font-family: Consolas, Monaco, 'Andale Mono', monospace; }
+
+/* hide the "I win" / "Solve" text */
+h3 {
+  font-size: 5px;
+  color: white;
+}
+
+#game-board, #game-board * {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box; }
+
+/* width = height = 3 * tile_size + 2*border */
+#game-board {
+  display: inline-block;
+  width: 94px;
+  height: 94px;
+  padding: 0;
+  margin: 0;
+  border: 2px solid black;
+}
+
+.tile,
+.button {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* width = height = line-height = 100px, font-size = 50px */
+/* width = height = line-height =  50px, font-size = 25px */
+.tile {
+  width:  30px;
+  height: 30px;
+  float: left;
+  line-height: 30px;
+  font-size: 15px;
+  background: #fff; }
+  .tile:hover:not(:empty) {
+    cursor: pointer;
+    -webkit-transition: -webkit-transform 0.2s, background 0.2s;
+            transition: transform 0.2s, background 0.2s;
+    background: #eee; }
+
+.win {
+  -webkit-animation: winner 2s infinite;
+          animation: winner 2s infinite; }
+
+.highlight,
+.move-up,
+.move-right,
+.move-down,
+.move-left {
+  background: #fdd !important; }
+
+.highlight {
+  background: #fff;
+  -webkit-animation: highlight 0.4s;
+          animation: highlight 0.4s; }
+
+/* translate = tile_size */
+.move-up {
+  -webkit-transform: translateY(-30px);
+      -ms-transform: translateY(-30px);
+          transform: translateY(-30px); }
+
+.move-right {
+  -webkit-transform: translateX(30px);
+      -ms-transform: translateX(30px);
+          transform: translateX(30px); }
+
+.move-down {
+  -webkit-transform: translateY(30px);
+      -ms-transform: translateY(30px);
+          transform: translateY(30px); }
+
+.move-left {
+  -webkit-transform: translateX(-30px);
+      -ms-transform: translateX(-30px);
+          transform: translateX(-30px); }
+
+/* the "Shuffle button" */
+.button {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #fdd;
+  border-radius: 25px;
+  font-size: 11px;
+  color: black;
+  border: 1px solid black; }
+  .button:hover {
+    cursor: pointer; }
+
+@-webkit-keyframes winner {
+  0% {
+    background: #fdd; }
+
+  50% {
+    background: #fff; }
+
+  100% {
+    background: #fdd; } }
+
+@keyframes winner {
+  0% {
+    background: #fdd; }
+
+  50% {
+    background: #fff; }
+
+  100% {
+    background: #fdd; } }
+@-webkit-keyframes highlight {
+  0% {
+    background: #fdd; }
+
+  100% {
+    background: #fff; } }
+@keyframes highlight {
+  0% {
+    background: #fdd; }
+
+  100% {
+    background: #fff; } }

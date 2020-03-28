@@ -1,0 +1,444 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!-- saved from url=(0076)https://coursera.cs.princeton.edu/algs4/assignments/kdtree/specification.php -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./specification_files/assignments.css">
+    <link rel="stylesheet" type="text/css" href="./specification_files/link-icons.css">
+    <script type="text/javascript" src="./specification_files/MathJax.js.下载"></script>
+    <title>Programming Assignment 5: Kd-Trees</title>
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body class="specification"><div id="MathJax_Message" style="display: none;"></div>
+
+
+<div id="nav2">
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/specification.php" id="logo"> <img src="./specification_files/logo.png"> Kd-Trees</a>
+<ul id="links">
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/specification.php" id="here">Spec</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/faq.php">FAQ</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/kdtree.zip">Project</a></li>
+<li><a href="https://www.coursera.org/learn/algorithms-part1/programming/wuF0a/kd-trees/submission" target="_blank">Submit</a></li>
+</ul>
+</div>
+
+
+Write a data type
+to represent a set of points in the unit square 
+(all points have <em>x</em>- and <em>y</em>-coordinates between 0 and 1)
+using a <em>2d-tree</em> to support
+efficient <em>range search</em> (find all of the points contained
+in a query rectangle) and <em>nearest-neighbor search</em> (find a
+closest point to a query point).
+2d-trees have numerous applications, ranging from classifying astronomical objects
+to computer animation to speeding up neural networks to mining data to image retrieval.
+
+<p>
+</p><center>
+<img src="./specification_files/kdtree-ops.png" width="600" alt="Range search and k-nearest neighbor">
+</center>
+
+<p><br><b>Geometric primitives.</b>
+To get started, use the following geometric primitives for points and
+axis-aligned rectangles in the plane.
+
+</p><p>
+</p><center>
+<img src="./specification_files/RectHV.png" width="450" alt="Geometric primitives">
+</center>
+
+<ul>
+
+<p></p><li>
+The immutable data type <a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/Point2D.html">Point2D</a> 
+(part of <code>algs4.jar</code>) represents points in the plane.
+Here is the subset of its API that you may use:
+
+<blockquote>
+<pre><b>public class Point2D implements Comparable&lt;Point2D&gt; {</b>
+<b>   public Point2D(double x, double y)              </b><font color="gray">// construct the point (x, y)</font>
+<b>   public  double x()                              </b><font color="gray">// x-coordinate</font> 
+<b>   public  double y()                              </b><font color="gray">// y-coordinate</font> 
+<b>   public  double distanceTo(Point2D that)         </b><font color="gray">// Euclidean distance between two points</font> 
+<b>   public  double distanceSquaredTo(Point2D that)  </b><font color="gray">// square of Euclidean distance between two points</font> 
+<b>   public     int compareTo(Point2D that)          </b><font color="gray">// for use in an ordered symbol table</font> 
+<b>   public boolean equals(Object that)              </b><font color="gray">// does this point equal that object?</font> 
+<b>   public    void draw()                           </b><font color="gray">// draw to standard draw</font> 
+<b>   public  String toString()                       </b><font color="gray">// string representation</font> 
+<b>}</b>
+</pre>
+</blockquote>
+
+
+<p></p></li><li>
+The immutable data type <a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/RectHV.html">RectHV</a>
+(part of <code>algs4.jar</code>)
+represents axis-aligned rectangles.
+Here is the subset of its API that you may use:
+
+
+<blockquote>
+<pre><b>public class RectHV {</b>
+<b>   public    RectHV(double xmin, double ymin,      </b><font color="gray">// construct the rectangle [xmin, xmax] x [ymin, ymax]</font> 
+<b>                    double xmax, double ymax)      </b><font color="gray">// throw an IllegalArgumentException if (xmin &gt; xmax) or (ymin &gt; ymax)</font>
+<b>   public  double xmin()                           </b><font color="gray">// minimum x-coordinate of rectangle</font> 
+<b>   public  double ymin()                           </b><font color="gray">// minimum y-coordinate of rectangle</font> 
+<b>   public  double xmax()                           </b><font color="gray">// maximum x-coordinate of rectangle</font> 
+<b>   public  double ymax()                           </b><font color="gray">// maximum y-coordinate of rectangle</font> 
+<b>   public boolean contains(Point2D p)              </b><font color="gray">// does this rectangle contain the point p (either inside or on boundary)?</font> 
+<b>   public boolean intersects(RectHV that)          </b><font color="gray">// does this rectangle intersect that rectangle (at one or more points)?</font> 
+<b>   public  double distanceTo(Point2D p)            </b><font color="gray">// Euclidean distance from point p to closest point in rectangle</font> 
+<b>   public  double distanceSquaredTo(Point2D p)     </b><font color="gray">// square of Euclidean distance from point p to closest point in rectangle</font> 
+<b>   public boolean equals(Object that)              </b><font color="gray">// does this rectangle equal that object?</font> 
+<b>   public    void draw()                           </b><font color="gray">// draw to standard draw</font> 
+<b>   public  String toString()                       </b><font color="gray">// string representation</font> 
+<b>}</b>
+</pre>
+</blockquote>
+
+</li></ul>
+
+Do not modify these data types.
+
+<p><b>Brute-force implementation.</b>
+Write a mutable data type <code>PointSET.java</code> that represents a set of
+points in the unit square.
+Implement the following API by using a red–black BST:
+
+</p><blockquote>
+<pre><b>public class PointSET {</b>
+<b>   public         PointSET()                               </b><font color="gray">// construct an empty set of points</font> 
+<b>   public           boolean isEmpty()                      </b><font color="gray">// is the set empty?</font> 
+<b>   public               int size()                         </b><font color="gray">// number of points in the set</font> 
+<b>   public              void insert(Point2D p)              </b><font color="gray">// add the point to the set (if it is not already in the set)</font>
+<b>   public           boolean contains(Point2D p)            </b><font color="gray">// does the set contain point p?</font> 
+<b>   public              void draw()                         </b><font color="gray">// draw all points to standard draw</font> 
+<b>   public Iterable&lt;Point2D&gt; range(RectHV rect)             </b><font color="gray">// all points that are inside the rectangle (or on the boundary)</font> 
+<b>   public           Point2D nearest(Point2D p)             </b><font color="gray">// a nearest neighbor in the set to point p; null if the set is empty</font> 
+
+<b>   public static void main(String[] args)                  </b><font color="gray">// unit testing of the methods (optional)</font> 
+<b>}</b>
+</pre>
+</blockquote>
+
+<p><em>Implementation requirements.&nbsp;</em>
+You must use either
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/SET.html"><code>SET</code></a> or
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/TreeSet.html"><code>java.util.TreeSet</code></a>;
+do not implement your own red–black BST.
+
+</p><p><em>Corner cases.&nbsp;</em>
+Throw an <code>IllegalArgumentException</code> if any argument is null.
+
+<em>Performance requirements.&nbsp;</em>
+Your implementation should support <code>insert()</code> and <code>contains()</code> in time
+proportional to the logarithm of the number of points in the set in the worst case; it should support
+<code>nearest()</code> and <code>range()</code> in time proportional to the number of points in the set.
+
+</p><p><b>2d-tree implementation.</b>
+Write a mutable data type <code>KdTree.java</code> that uses a 2d-tree to 
+implement the same API (but replace <code>PointSET</code> with <code>KdTree</code>).
+A <em>2d-tree</em> is a generalization of a BST to two-dimensional keys.
+The idea is to build a BST with points in the nodes,
+using the <em>x</em>- and <em>y</em>-coordinates of the points
+as keys in strictly alternating sequence.
+
+</p><ul>
+<p></p><li><em>Search and insert.</em> 
+The algorithms for search and insert are similar to those for
+BSTs, but at the root we use the <em>x</em>-coordinate
+(if the point to be inserted has a smaller <em>x</em>-coordinate
+than the point at the root, go left; otherwise go right);
+then at the next level, we use the <em>y</em>-coordinate
+(if the point to be inserted has a smaller <em>y</em>-coordinate
+than the point in the node, go left; otherwise go right);
+then at the next level the <em>x</em>-coordinate, and so forth.
+</li></ul>
+
+<p>
+
+</p><blockquote>
+<table border="0" cellpadding="2" cellspacing="0">
+
+<tbody><tr>
+<td><center>&nbsp;&nbsp;<img src="./specification_files/kdtree1.png" width="175" alt="Insert (0.7, 0.2)">&nbsp;&nbsp;</center>
+<br><center><font size="-1"><em>insert (0.7, 0.2)</em></font></center>
+</td><td><center>&nbsp;&nbsp;<img src="./specification_files/kdtree2.png" width="175" alt="Insert (0.5, 0.4)">&nbsp;&nbsp;</center>
+<br><center><font size="-1"><em>insert (0.5, 0.4)</em></font></center>
+</td><td><center>&nbsp;&nbsp;<img src="./specification_files/kdtree3.png" width="175" alt="Insert (0.2, 0.3)">&nbsp;&nbsp;</center>
+<br><center><font size="-1"><em>insert (0.2, 0.3)</em></font></center>
+</td><td><center>&nbsp;&nbsp;<img src="./specification_files/kdtree4.png" width="175" alt="Insert (0.4, 0.7)">&nbsp;&nbsp;</center>
+<br><center><font size="-1"><em>insert (0.4, 0.7)</em></font></center>
+</td><td><center>&nbsp;&nbsp;<img src="./specification_files/kdtree5.png" width="175" alt="Insert (0.9, 0.6)">&nbsp;&nbsp;</center>
+<br><center><font size="-1"><em>insert (0.9, 0.6)</em></font></center>
+<!-- <td><center>&nbsp;&nbsp;<IMG SRC="kdtree6.png" width = 175  alt = "Insert (0.8, 0.1)">&nbsp;&nbsp;</center> -->
+<!-- <br><center><font size = -1><em>insert (0.8, 0.1)</em></font></center> -->
+</td></tr>
+
+
+<tr>
+<td><center><img src="./specification_files/kdtree-insert1.png" width="175" alt="Insert (0.7, 0.2)"></center>
+</td><td><center><img src="./specification_files/kdtree-insert2.png" width="175" alt="Insert (0.5, 0.4)"></center>
+</td><td><center><img src="./specification_files/kdtree-insert3.png" width="175" alt="Insert (0.2, 0.3)"></center>
+</td><td><center><img src="./specification_files/kdtree-insert4.png" width="175" alt="Insert (0.4, 0.7)"></center>
+</td><td><center><img src="./specification_files/kdtree-insert5.png" width="175" alt="Insert (0.9, 0.6)"></center>
+<!-- <td><center><IMG SRC="kdtree-insert6.png" width = 175 alt = "Insert (0.8, 0.1)"></center> -->
+</td></tr>
+
+
+</tbody></table>
+</blockquote>
+
+<ul>
+<p></p><li><em>Draw.</em> 
+A 2d-tree divides the unit square in a simple way: all the points to the
+left of the root go in the left subtree; all those to the right go in 
+the right subtree; and so forth, recursively.
+Your <code>draw()</code> method should draw all of the points to standard draw
+in black and the subdivisions in red (for vertical splits) and blue (for 
+horizontal splits).
+This method need not be efficient—it is primarily for debugging.
+
+</li></ul>
+
+
+<p>
+The prime advantage of a 2d-tree over a BST
+is that it supports efficient
+implementation of range search and nearest-neighbor search.
+Each node corresponds to an axis-aligned rectangle in the unit square,
+which encloses all of the points in its subtree.
+The root corresponds to the unit square; the left and right children
+of the root corresponds to the two rectangles
+split by the <em>x</em>-coordinate of the point at the root; and so forth.
+
+</p><ul>
+
+<p></p><li><em>Range search.</em>
+To find all points contained in a given query rectangle, start at the root
+and recursively search for points in <em>both</em> subtrees using the following
+<em>pruning rule</em>:  if the query rectangle does not intersect the rectangle 
+corresponding to a node, there is no need to explore that node (or its subtrees).
+A subtree is searched only if it might contain a point contained in
+the query rectangle.
+
+<p></p></li><li><em>Nearest-neighbor search.</em>
+To find a closest point to a given query point, start at the root
+and recursively search in <em>both</em> subtrees using the following <em>pruning rule</em>:
+if the closest point discovered so far is closer than the distance 
+between the query point and the rectangle corresponding to a node,
+there is no need to explore that node (or its subtrees).
+That is, search a node only only if it might contain a point
+that is closer than the best one found so far.
+The effectiveness of the pruning rule depends on quickly finding a 
+nearby point. To do this, organize the recursive method so that when 
+there are two possible subtrees to go down, you always choose 
+<em>the subtree
+that is on the same side of the splitting line as the query point</em>
+as  the first subtree to explore—the closest point
+found while exploring the first
+subtree may enable pruning of the second subtree.
+
+<!--
+<p><li><em>k nearest-neighbor search.</em>
+Similar to finding the nearest-neighbor but prune if the <em>k</em>th closest point
+discovered so far is closer than the distance between the query point
+and the rectangle corresponding to a node.
+-->
+
+</li></ul>
+
+
+<p><b>Clients.</b>&nbsp;
+You may use the following interactive client programs to test and debug your code.
+</p><ul>
+<p></p><li>
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/files/KdTreeVisualizer.java">KdTreeVisualizer.java</a>
+computes and draws the 2d-tree that results from the sequence of points clicked by the
+user in the standard drawing window.
+
+<p></p></li><li>
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/files/RangeSearchVisualizer.java">RangeSearchVisualizer.java</a>
+reads a sequence of points from a file (specified as a command-line argument) and inserts those points
+into a 2d-tree. Then, it performs range searches on the axis-aligned rectangles dragged
+by the user in the standard drawing window.
+
+<p></p></li><li>
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/files/NearestNeighborVisualizer.java">NearestNeighborVisualizer.java</a>
+reads a sequence of points from a file (specified as a command-line argument) and inserts those points
+into a 2d-tree. Then, it performs nearest-neighbor queries on the 
+point corresponding
+to the location of the mouse in the standard drawing window.
+
+</li></ul>
+
+<p><b>Analysis of running time and memory usage (optional and not graded).</b>&nbsp;
+
+</p><ul>
+<p></p><li> Give the total memory usage in bytes (using tilde notation)
+of your 2d-tree data structure as a function of the 
+number of points <em>n</em>, using the memory-cost model from lecture and Section 1.4 of the textbook.
+Count all memory that is used by your 2d-tree, including
+memory for the nodes, points, and rectangles.
+
+<p></p></li><li> Give the expected running time in seconds (using tilde notation)
+to build a 2d-tree on <em>n</em> random points in the unit square.
+(Do not count the time to read in the points from standard input.)
+
+<p></p></li><li> How many nearest-neighbor calculations can your 2d-tree implementation
+perform per second for
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/files/input100K.txt">input100K.txt</a>
+(100,000 points) and
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/kdtree/files/input1M.txt">input1M.txt</a>
+(1 million points),
+where the query points are random points in the unit square?
+(Do not count the time to read in the points or to build the 2d-tree.)
+Repeat this question but with the brute-force implementation.
+
+
+</li></ul>
+
+<p><b>Web submission.</b>
+Submit a .zip file containing only
+<code>PointSET.java</code> and <code>KdTree.java</code>.
+We will supply <code>algs4.jar</code>.
+Your may not call library functions except those in
+those in <code>java.lang</code>, <code>java.util</code>, and <code>algs4.jar</code>.
+
+
+</p><p><br>
+
+
+</p><address><small>
+This assignment was developed by Bob Sedgewick and Kevin Wayne.
+<br>Copyright © 2004.
+</small>
+</address>
+
+
+</body><style id="stylus-8" type="text/css" class="stylus">::-webkit-scrollbar{width:6px!important;height:6px!important;}
+body::-webkit-scrollbar{width:6 px!important;height:6px!important;}
+
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.22)!important;border-radius:8px!important;}
+
+
+::-webkit-scrollbar-thumb{background-color:#343434 !important;min-height:50px;border-radius:5px!important;}
+
+
+@keyframes fadein {
+0% {opacity: 0;}
+100% {}
+}
+
+body {
+animation-name: fadein;
+animation-duration: 0.4s;
+}scrollbar *
+  scrollbar scrollbarbutton{visibility:collapse!important;}
+  scrollbar scrollbarbutton{display:none!important;}
+ 
+  scrollbar[orient="vertical"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;min-width:2px!important;max-width:2px!important;border-radius:5px;}
+  scrollbar[orient="vertical"]:hover{-moz-appearance:none!important;}
+  scrollbar thumb[orient="vertical"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:25px!important;min-width:2px!important;max-width:2px!important;border:1px!important;opacity:0.87;}
+  scrollbar thumb[orient="vertical"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+  
+  scrollbar[orient="horizontal"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;background-color:transparent!important;opacity:.75!important;min-height:2px!important;max-height:9px!important;border-radius:5px;}
+  scrollbar[orient="horizontal"]:hover{-moz-appearance:none!important;background-color:transparent!important;min-height:9px!important;max-height:9px!important}
+  scrollbar thumb[orient="horizontal"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:7px!important;max-height:7px!important;border:1px!important;margin-left:0px!important;opacity:0.87;}
+  scrollbar thumb[orient="horizontal"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+
+scrollcorner{opacity:0!important}
+scrollbar scrollcorner:hover{background:transparent!important}</style></html>

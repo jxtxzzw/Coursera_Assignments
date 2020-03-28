@@ -1,0 +1,457 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!-- saved from url=(0079)https://coursera.cs.princeton.edu/algs4/assignments/collinear/specification.php -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./specification_files/assignments.css">
+    <link rel="stylesheet" type="text/css" href="./specification_files/link-icons.css">
+    <script type="text/javascript" src="./specification_files/MathJax.js.下载"></script>
+    <title>Programming Assignment 3: Collinear Points</title>
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body class="specification"><div id="MathJax_Message" style="display: none;"></div>
+
+
+<div id="nav2">
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/collinear/specification.php" id="logo-noborder"> <img src="./specification_files/logo.png"> Collinear Points</a>
+<ul id="links">
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/collinear/specification.php" id="here">Spec</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/collinear/faq.php">FAQ</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/collinear/collinear.zip">Project</a></li>
+<li><a href="https://www.coursera.org/learn/algorithms-part1/programming/prXiW/collinear-points/submission" target="_blank">Submit</a></li>
+</ul>
+</div>
+
+Write a program to recognize line patterns in a given set of points.
+
+<p>
+Computer vision involves analyzing patterns in visual images and
+reconstructing the real-world objects that produced them.  The process
+is often broken up into two phases: <em>feature detection</em> and
+<em>pattern recognition</em>. Feature detection involves selecting
+important features of the image; pattern recognition involves
+discovering patterns in the features. We will investigate a
+particularly clean pattern recognition problem involving points and
+line segments.  This kind of pattern recognition arises in many other
+applications such as statistical data analysis.
+
+</p><p>
+<b>The problem.</b>
+Given a set of <em>n</em> distinct points in the plane, 
+find every (maximal) line segment that connects a subset of 4 or more of the points.
+</p><p>
+
+</p><center>
+<img src="./specification_files/lines2.png" width="500" height="200" alt="Points and lines">
+</center>
+
+<p>
+<b>Point data type.</b>
+Create an immutable data type <code>Point</code> that represents a point in the plane
+by implementing the following API:
+
+</p><blockquote>
+<pre><b>public class Point implements Comparable&lt;Point&gt; {</b>
+<font color="gray">   public Point(int x, int y)                         // constructs the point (x, y)</font>
+
+<font color="gray">   public   void draw()                               // draws this point</font>
+<font color="gray">   public   void drawTo(Point that)                   // draws the line segment from this point to that point</font>
+<font color="gray">   public String toString()                           // string representation</font>
+
+<b>   public               int compareTo(Point that)</b>     <font color="gray">// compare two points by y-coordinates, breaking ties by x-coordinates</font>
+<b>   public            double slopeTo(Point that)</b>       <font color="gray">// the slope between this point and that point</font>
+<b>   public Comparator&lt;Point&gt; slopeOrder()</b>              <font color="gray">// compare two points by slopes they make with this point</font>
+<b>}</b>
+</pre>
+</blockquote>
+
+To get started, use the data type
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/collinear/files/Point.java">Point.java</a>,
+which implements the constructor and the
+<code>draw()</code>, <code>drawTo()</code>, and <code>toString()</code> methods.
+Your job is to add the following components.
+
+
+<ul>
+
+
+<p></p><li> The <code>compareTo()</code> method should compare points by their <em>y</em>-coordinates,
+breaking ties by their <em>x</em>-coordinates.
+Formally, the invoking point
+(<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>)
+is <em>less than</em> the argument point
+(<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>)
+if and only if either <em>y</em><sub>0</sub> &lt; <em>y</em><sub>1</sub> or if
+<em>y</em><sub>0</sub> = <em>y</em><sub>1</sub> and <em>x</em><sub>0</sub> &lt; <em>x</em><sub>1</sub>.
+
+<p></p></li><li> The <code>slopeTo()</code> method should return the slope between the invoking point
+(<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>) and the argument point
+(<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>), which is given by the formula
+(<em>y</em><sub>1</sub> − <em>y</em><sub>0</sub>) / (<em>x</em><sub>1</sub> − <em>x</em><sub>0</sub>).
+Treat the slope of a horizontal line segment as positive zero;
+treat the slope of a vertical line segment as positive infinity;
+treat the slope of a degenerate line segment (between a point and itself) as negative infinity.
+
+<p></p></li><li> The <code>slopeOrder()</code> method should return a comparator that compares its two argument
+points by the slopes they make with the invoking point (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>).
+Formally, the point (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>) is <em>less than</em>
+the point (<em>x</em><sub>2</sub>, <em>y</em><sub>2</sub>) if and only if the slope
+(<em>y</em><sub>1</sub> − <em>y</em><sub>0</sub>) / (<em>x</em><sub>1</sub> − <em>x</em><sub>0</sub>) 
+is less than the slope
+(<em>y</em><sub>2</sub> − <em>y</em><sub>0</sub>) / (<em>x</em><sub>2</sub> − <em>x</em><sub>0</sub>).
+Treat horizontal, vertical, and degenerate line segments as in the <code>slopeTo()</code> method.
+
+<p></p></li><li> Do <em>not</em> override the <code>equals()</code> or <code>hashCode()</code> methods.
+
+</li></ul>
+
+<p><em>Corner cases.</em> To avoid potential complications with integer overflow or floating-point precision,
+you may assume that the constructor arguments <code>x</code> and <code>y</code> are each between 0 and 32,767.
+
+</p><p>
+<b>Line segment data type.</b>
+To represent line segments in the plane, use the data type
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/collinear/files/LineSegment.java">LineSegment.java</a>,
+which has the following API:
+
+</p><blockquote>
+<pre><b>public class LineSegment {</b>
+<font color="gray">   public LineSegment(Point p, Point q)        // constructs the line segment between points p and q</font>
+<font color="gray">   public   void draw()                        // draws this line segment</font>
+<font color="gray">   public String toString()                    // string representation</font>
+<b>}</b>
+</pre>
+</blockquote>
+
+<p>
+<b>Brute force.</b>
+Write a program <code>BruteCollinearPoints.java</code> that examines 4 
+points at a time and checks whether they all lie on the same line segment, returning all such line segments.
+To check whether the 4 points <em>p</em>, <em>q</em>, <em>r</em>, and <em>s</em> are collinear,
+check whether the three slopes between <em>p</em> and <em>q</em>, 
+between <em>p</em> and <em>r</em>, and between <em>p</em> and <em>s</em>
+are all equal.
+
+
+</p><blockquote>
+<pre><b>public class BruteCollinearPoints {</b>
+<b>   public BruteCollinearPoints(Point[] points)    </b><font color="gray">// finds all line segments containing 4 points</font>
+<b>   public           int numberOfSegments()        </b><font color="gray">// the number of line segments</font>
+<b>   public LineSegment[] segments()                </b><font color="gray">// the line segments</font>
+<b>}</b>
+</pre>
+</blockquote>
+
+
+<p>
+The method <code>segments()</code> should include each line segment containing 4 points exactly once.
+
+If 4 points appear on a line segment in the
+order <em>p</em>→<em>q</em>→<em>r</em>→<em>s</em>,
+then you should include either the line segment
+<em>p</em>→<em>s</em> or <em>s</em>→<em>p</em> (but not both)
+and you should not include <em>subsegments</em> such as <em>p</em>→<em>r</em> or
+<em>q</em>→<em>r</em>.
+For simplicity,
+we will not supply any input to <code>BruteCollinearPoints</code> that has 5 or more collinear points.
+
+</p><p><em>Corner cases.</em>
+Throw an <code>IllegalArgumentException</code> if the argument to the constructor
+is <code>null</code>, if any point in the array is <code>null</code>, or if
+the argument to the constructor contains a repeated point.
+
+
+
+</p><p><em>Performance requirement.</em>
+The order of growth of the running time of your program should be
+<em>n</em><sup>4</sup> in the worst case and 
+it should use space proportional to <em>n</em> plus the number of line segments returned.
+
+
+</p><p>
+<b>A faster, sorting-based solution.</b>
+Remarkably, it is possible to solve the problem much faster than the
+brute-force solution described above.
+Given a point <em>p</em>, the following method determines whether <em>p</em>
+participates in a set of 4 or more collinear points.
+</p><ul>
+<li>Think of <em>p</em> as the origin.
+<p></p></li><li>For each other point <em>q</em>, determine the slope it makes with <em>p</em>.
+<p></p></li><li>Sort the points according to the slopes
+they makes with <em>p</em>.
+<p></p></li><li>Check if any 3 (or more) adjacent points in the sorted order have equal
+slopes with respect to <em>p</em>.
+If so, these points, together with <em>p</em>, are collinear.
+</li></ul>
+
+Applying this method for each of the <em>n</em> points in turn yields an
+efficient algorithm to the problem.
+The algorithm solves the problem because points that have equal 
+slopes with respect to <em>p</em> are collinear, and sorting brings such points together.
+The algorithm is fast because the bottleneck operation is sorting.
+
+<p>
+
+</p><center>
+<img src="./specification_files/lines1.png" width="300" alt="Points and slopes">
+</center>
+<p>
+Write a program <code>FastCollinearPoints.java</code> that implements this algorithm.
+
+</p><blockquote>
+<pre><b>public class FastCollinearPoints {</b>
+<b>   public FastCollinearPoints(Point[] points)     </b><font color="gray">// finds all line segments containing 4 or more points</font>
+<b>   public           int numberOfSegments()        </b><font color="gray">// the number of line segments</font>
+<b>   public LineSegment[] segments()                </b><font color="gray">// the line segments</font>
+<b>}</b>
+</pre>
+</blockquote>
+
+<p>
+The method <code>segments()</code> should include each <em>maximal</em> line segment
+containing 4 (or more) points exactly once.
+For example, if 5 points appear on a line segment in the
+order <em>p</em>→<em>q</em>→<em>r</em>→<em>s</em>→<em>t</em>,
+then do not include the subsegments <em>p</em>→<em>s</em> or <em>q</em>→<em>t</em>.
+
+
+</p><p><em>Corner cases.</em>
+Throw an <code>IllegalArgumentException</code> if the argument to the constructor
+is <code>null</code>, if any point in the array is <code>null</code>, or
+if the argument to the constructor contains a repeated point.
+
+</p><p><em>Performance requirement.</em>
+The order of growth of the running time of your program should be
+<em>n</em><sup>2</sup> log <em>n</em> in the worst case and 
+it should use space proportional to <em>n</em> plus the number of line segments returned.
+<code>FastCollinearPoints</code> should work properly even if the input has 5 or more collinear points.
+
+
+</p><p>
+<b>Sample client.</b> 
+This client program takes the name of an input file as a command-line argument;
+read the input file (in the format specified below);
+prints to standard output the line segments that your program discovers, one per line;
+and draws to standard draw the line segments.
+
+</p><blockquote>
+<pre>public static void main(String[] args) {
+
+    <font color="gray">// read the n points from a file</font>
+    In in = new In(args[0]);
+    int n = in.readInt();
+    Point[] points = new Point[n];
+    for (int i = 0; i &lt; n; i++) {
+        int x = in.readInt();
+        int y = in.readInt();
+        points[i] = new Point(x, y);
+    }
+
+    <font color="gray">// draw the points</font>
+    StdDraw.enableDoubleBuffering();
+    StdDraw.setXscale(0, 32768);
+    StdDraw.setYscale(0, 32768);
+    for (Point p : points) {
+        p.draw();
+    }
+    StdDraw.show();
+
+    <font color="gray">// print and draw the line segments</font>
+    FastCollinearPoints collinear = new FastCollinearPoints(points);
+    for (LineSegment segment : collinear.segments()) {
+        StdOut.println(segment);
+        segment.draw();
+    }
+    StdDraw.show();
+}
+</pre>
+</blockquote>
+
+
+
+<p>
+<b>Input format.</b>
+We supply several sample input files (suitable for use with the test client above)
+ in the following format:
+An integer <em>n</em>, followed by <em>n</em>
+pairs of integers (<em>x</em>, <em>y</em>), each between 0 and 32,767.
+Below are two examples.
+
+</p><blockquote>
+<pre>% <b>cat input6.txt</b>        % <b>cat input8.txt</b>
+6                       8
+19000  10000             10000      0
+18000  10000                 0  10000
+32000  10000              3000   7000
+21000  10000              7000   3000
+ 1234   5678             20000  21000
+14000  10000              3000   4000
+                         14000  15000
+                          6000   7000
+</pre>
+</blockquote>
+
+
+<blockquote><pre>% <b>java-algs4 BruteCollinearPoints input8.txt</b>
+(10000, 0) -&gt; (0, 10000) 
+(3000, 4000) -&gt; (20000, 21000) 
+
+% <b>java-algs4 FastCollinearPoints input8.txt</b>
+(3000, 4000) -&gt; (20000, 21000) 
+(0, 10000) -&gt; (10000, 0)
+
+% <b>java-algs4 FastCollinearPoints input6.txt</b>
+(14000, 10000) -&gt; (32000, 10000) 
+</pre>
+</blockquote>
+
+
+
+<p><b>Web submission.</b>
+Submit a .zip file containing only
+<code>BruteCollinearPoints.java</code>, <code>FastCollinearPoints.java</code>, and <code>Point.java</code>.
+We will supply <code>LineSegment.java</code> and <code>algs4.jar</code>.
+You may not call any library functions except those in
+<code>java.lang</code>, <code>java.util</code>, and <code>algs4.jar</code>.
+You may use library functions in <code>java.util</code> only if they have already
+been introduced in the course. For example, you may use
+<code>Arrays.sort()</code>, but not <code>java.util.HashSet</code>.
+
+
+
+</p><p><br>
+
+
+</p><address><small>
+This assignment was developed by Bob Sedgewick and Kevin Wayne.
+<br>Copyright © 2008.
+</small>
+</address>
+
+
+</body><style id="stylus-8" type="text/css" class="stylus">::-webkit-scrollbar{width:6px!important;height:6px!important;}
+body::-webkit-scrollbar{width:6 px!important;height:6px!important;}
+
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.22)!important;border-radius:8px!important;}
+
+
+::-webkit-scrollbar-thumb{background-color:#343434 !important;min-height:50px;border-radius:5px!important;}
+
+
+@keyframes fadein {
+0% {opacity: 0;}
+100% {}
+}
+
+body {
+animation-name: fadein;
+animation-duration: 0.4s;
+}scrollbar *
+  scrollbar scrollbarbutton{visibility:collapse!important;}
+  scrollbar scrollbarbutton{display:none!important;}
+ 
+  scrollbar[orient="vertical"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;min-width:2px!important;max-width:2px!important;border-radius:5px;}
+  scrollbar[orient="vertical"]:hover{-moz-appearance:none!important;}
+  scrollbar thumb[orient="vertical"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:25px!important;min-width:2px!important;max-width:2px!important;border:1px!important;opacity:0.87;}
+  scrollbar thumb[orient="vertical"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+  
+  scrollbar[orient="horizontal"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;background-color:transparent!important;opacity:.75!important;min-height:2px!important;max-height:9px!important;border-radius:5px;}
+  scrollbar[orient="horizontal"]:hover{-moz-appearance:none!important;background-color:transparent!important;min-height:9px!important;max-height:9px!important}
+  scrollbar thumb[orient="horizontal"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:7px!important;max-height:7px!important;border:1px!important;margin-left:0px!important;opacity:0.87;}
+  scrollbar thumb[orient="horizontal"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+
+scrollcorner{opacity:0!important}
+scrollbar scrollcorner:hover{background:transparent!important}</style></html>

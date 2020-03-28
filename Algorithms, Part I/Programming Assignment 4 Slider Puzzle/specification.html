@@ -1,0 +1,758 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!-- saved from url=(0077)https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/specification.php -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./specification_files/assignments.css">
+    <link rel="stylesheet" type="text/css" href="./specification_files/link-icons.css">
+    <script type="text/javascript" src="./specification_files/MathJax.js.下载"></script>
+    <link rel="stylesheet" href="./specification_files/8puzzle.css">
+    <script src="./specification_files/react-0.11.1.js.下载"></script>
+    <script src="./specification_files/JSXTransformer-0.11.1.js.下载"></script>
+    <title>Programming Assignment 4: Slider Puzzle</title>
+<script>/** @jsx React.DOM */
+
+// ReactJS Slide Puzzle
+// Author:     Evan Henley
+// Author URI: henleyedition.com
+
+(function() {
+
+    var Game = React.createClass({displayName: 'Game',
+
+        shuffle: function(array) {
+
+            // switches first two tiles
+            function switchTiles(array) {
+                var i = 0;
+
+                // find the first two tiles in a row
+                while (!array[i] || !array[i+1]) i++;
+
+                // store tile value
+                var tile = array[i];
+                // switche values
+                array[i] = array[i+1];
+                array[i+1] = tile;
+
+                return array;
+            }
+
+            // counts inversions
+            function countInversions(array) {
+                // make array of inversions
+                var invArray = array.map(function(num, i) {
+                    var inversions = 0;
+                    for (j = i + 1; j < array.length; j++) {
+                        if (array[j] && array[j] < num) {
+                            inversions += 1;
+                        }
+                    }
+                    return inversions;
+                });
+                // return sum of inversions array
+                return invArray.reduce(function(a, b) {
+                    return a + b;
+                });
+            }
+
+            // fischer-yates shuffle algorithm
+            function fischerYates(array) {
+                var counter = array.length, temp, index;
+
+                // While there are elements in the array
+                while (counter > 0) {
+                    // Pick a random index
+                    index = Math.floor(Math.random() * counter);
+                    // Decrease counter by 1
+                    counter--;
+                    // And swap the last element with it
+                    temp = array[counter];
+                    array[counter] = array[index];
+                    array[index] = temp;
+                }
+
+                return array;
+            }
+
+            // Fischer-Yates shuffle
+            array = fischerYates(array);
+
+            // check for even number of inversions
+            if (countInversions(array) % 2 !== 0) {
+                // switch two tiles if odd
+                array = switchTiles(array);
+            }
+
+            return array;
+        },
+        getInitialState: function() {
+            return {
+                // initial state of game board
+                tiles: this.shuffle([
+                    1,2,3,
+                    4,5,6,
+                    7,8,''
+                ]),
+                win: false
+            };
+        },
+        checkBoard: function() {
+            var tiles = this.state.tiles;
+
+            for (var i = 0; i < tiles.length-1; i++) {
+                if (tiles[i] !== i+1) return false;
+            }
+
+            return true;
+        },
+        tileClick: function(tileEl, position, status) {
+            var tiles = this.state.tiles;
+            // Possible moves
+            // [up,right,down,left]
+            // 9 = out of bounds
+            var moves = [
+                [null,1,3,null],[null,2,4,0],[null,null,5,1],
+                [0,4,6,null],   [1,5,7,3],   [2,null,8,4],
+                [3,7,null,null],[4,8,null,6],[5,null,null,7]
+            ];
+
+            function animateTiles(i, move) {
+                var directions = ['up','right','down','left'];
+                var moveToEl = document.querySelector('.tile:nth-child(' + (move + 1) + ')');
+                direction = directions[i];
+                tileEl.classList.add('move-' + direction);
+                // this is all a little hackish.
+                // css/js are used together to create the illusion of moving blocks
+                setTimeout(function() {
+                    moveToEl.classList.add('highlight');
+                    tileEl.classList.remove('move-' + direction);
+                    // time horribly linked with css transition
+                    setTimeout(function() {
+                        moveToEl.classList.remove('highlight');
+                    }, 400);
+                }, 200);
+            }
+
+            // called after tile is fully moved
+            // sets new state
+            function afterAnimate() {
+                tiles[position] = '';
+                tiles[move] = status;
+                this.setState({
+                    tiles: tiles,
+                    moves: moves,
+                    win: this.checkBoard()
+                });
+            };
+
+            // return if they've already won
+            if (this.state.win) return;
+
+            // check possible moves
+            for (var i = 0; i < moves[position].length; i++) {
+                var move = moves[position][i];
+                // if an adjacent tile is empty
+                if (typeof move === 'number' && !tiles[move]) {
+                    animateTiles(i, move);
+                    setTimeout(afterAnimate.bind(this), 200);
+                    break;
+                }
+            }
+        },
+        restartGame: function() {
+            this.setState(this.getInitialState());
+        },
+        render: function() {
+            return React.DOM.div(null, 
+                React.DOM.div({id: "game-board"}, 
+                    this.state.tiles.map(function(tile, position) {
+                        return ( Tile({status: tile, key: position, tileClick: this.tileClick}) );
+                    }, this)
+                ), 
+                Menu({winClass: this.state.win ? 'button win' : 'button', status: this.state.win ? 'You win!' : 'Solve the puzzle.', restart: this.restartGame})
+            );
+        }
+    });
+
+    var Tile = React.createClass({displayName: 'Tile',
+        clickHandler: function(e) {
+            this.props.tileClick(e.target, this.props.key, this.props.status);
+        },
+        render: function() {
+            return React.DOM.div({className: "tile", onClick: this.clickHandler}, this.props.status);
+        }
+    });
+
+    var Menu = React.createClass({displayName: 'Menu',
+        clickHandler: function() {
+            this.props.restart();
+        },
+        render: function() {
+            return React.DOM.div({id: "menu"}, 
+                React.DOM.h3({id: "subtitle"}, this.props.status), 
+                React.DOM.a({className: this.props.winClass, onClick: this.clickHandler}, "Shuffle")
+            );
+        }
+    });
+
+    // render Game to container
+    React.renderComponent(
+        Game(null),
+        document.getElementById('game-container')
+    );
+
+}());
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidHJhbnNmb3JtZWQuanMiLCJzb3VyY2VzIjpbImFsZ3M0L2Fzc2lnbm1lbnRzLzhwdXp6bGUvOHB1enpsZS5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxxQkFBcUI7O0FBRXJCLHVCQUF1QjtBQUN2QiwwQkFBMEI7QUFDMUIsZ0NBQWdDOztBQUVoQyxDQUFDLFdBQVc7O0FBRVosSUFBSSxJQUFJLDBCQUEwQixvQkFBQTs7QUFFbEMsUUFBUSxPQUFPLEVBQUUsU0FBUyxLQUFLLEVBQUU7QUFDakM7O1lBRVksU0FBUyxXQUFXLENBQUMsS0FBSyxFQUFFO0FBQ3hDLGdCQUFnQixJQUFJLENBQUMsR0FBRyxDQUFDLENBQUM7QUFDMUI7O0FBRUEsZ0JBQWdCLE9BQU8sQ0FBQyxLQUFLLENBQUMsQ0FBQyxDQUFDLElBQUksQ0FBQyxLQUFLLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxFQUFFLENBQUMsRUFBRSxDQUFDO0FBQ3JEOztBQUVBLGdCQUFnQixJQUFJLElBQUksR0FBRyxLQUFLLENBQUMsQ0FBQyxDQUFDLENBQUM7O2dCQUVwQixLQUFLLENBQUMsQ0FBQyxDQUFDLEdBQUcsS0FBSyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUN0QyxnQkFBZ0IsS0FBSyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsR0FBRyxJQUFJLENBQUM7O2dCQUVsQixPQUFPLEtBQUssQ0FBQztBQUM3QixhQUFhO0FBQ2I7O0FBRUEsWUFBWSxTQUFTLGVBQWUsQ0FBQyxLQUFLLEVBQUU7O2dCQUU1QixJQUFJLFFBQVEsR0FBRyxLQUFLLENBQUMsR0FBRyxDQUFDLFNBQVMsR0FBRyxFQUFFLENBQUMsRUFBRTtvQkFDdEMsSUFBSSxVQUFVLEdBQUcsQ0FBQyxDQUFDO29CQUNuQixLQUFLLENBQUMsR0FBRyxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsR0FBRyxLQUFLLENBQUMsTUFBTSxFQUFFLENBQUMsRUFBRSxFQUFFO3dCQUNuQyxJQUFJLEtBQUssQ0FBQyxD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TUFBTyxDQUFBLEVBQUE7Z0JBQ2xCLFlBQUcsQ0FBQSxDQUFBLENBQUMsRUFBQSxFQUFFLENBQUMsVUFBVyxDQUFBLEVBQUMsSUFBSSxDQUFDLEtBQUssQ0FBQyxNQUFZLENBQUEsRUFBQTtnQkFDMUMsV0FBRSxDQUFBLENBQUEsQ0FBQyxTQUFBLEVBQVMsQ0FBRSxJQUFJLENBQUMsS0FBSyxDQUFDLFFBQVEsRUFBQyxDQUFDLE9BQUEsRUFBTyxDQUFFLElBQUksQ0FBQyxZQUFjLENBQUEsRUFBQSxTQUFXLENBQUE7WUFDeEUsQ0FBQSxDQUFDO1NBQ1Y7QUFDVCxLQUFLLENBQUMsQ0FBQztBQUNQOztJQUVJLEtBQUssQ0FBQyxlQUFlO1FBQ2hCLElBQUksQ0FBQSxJQUFBLENBQUcsQ0FBQTtRQUNSLFFBQVEsQ0FBQyxjQUFjLENBQUMsZ0JBQWdCLENBQUM7QUFDakQsS0FBSyxDQUFDOztDQUVMLEVBQUUsRUFBRSIsInNvdXJjZXNDb250ZW50IjpbIi8qKiBAanN4IFJlYWN0LkRPTSAqL1xuXG4vLyBSZWFjdEpTIFNsaWRlIFB1enpsZVxuLy8gQXV0aG9yOiAgICAgRXZhbiBIZW5sZXlcbi8vIEF1dGhvciBVUkk6IGhlbmxleWVkaXRpb24uY29tXG5cbihmdW5jdGlvbigpIHtcblxuICAgIHZhciBHYW1lID0gUmVhY3QuY3JlYXRlQ2xhc3Moe1xuXG4gICAgICAgIHNodWZmbGU6IGZ1bmN0aW9uKGFycmF5KSB7XG5cbiAgICAgICAgICAgIC8vIHN3aXRjaGVzIGZpcnN0IHR3byB0aWxlc1xuICAgICAgICAgICAgZnVuY3Rpb24gc3dpdGNoVGlsZXMoYXJyYXkpIHtcbiAgICAgICAgICAgICAgICB2YXIgaSA9IDA7XG5cbiAgICAgICAgICAgICAgICAvLyBmaW5kIHRoZSBmaXJzdCB0d28gdGlsZXMgaW4gYSByb3dcbiAgICAgICAgICAgICAgICB3aGlsZSAoIWFycmF5W2ldIHx8ICFhcnJheVtpKzFdKSBpKys7XG5cbiAgICAgICAgICAgICAgICAvLyBzdG9yZSB0aWxlIHZhbHVlXG4gICAgICAgICAgICAgICAgdmFyIHRpbGUgPSBhcnJheVtpXTtcbiAgICAgICAgICAgICAgICAvLyBzd2l0Y2hlIHZhbHVlc1xuICAgICAgICAgICAgICAgIGFycmF5W2ldID0gYXJyYXlbaSsxXTtcbiAgICAgICAgICAgICAgICBhcnJheVtpKzFdID0gdGlsZTtcblxuICAgICAgICAgICAgICAgIHJldHVybiBhcnJheTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLy8gY291bnRzIGludmVyc2lvbnNcbiAgICAgICAgICAgIGZ1bmN0aW9uIGNvdW50SW52ZXJzaW9ucyhhcnJheSkge1xuICAgICAgICAgICAgICAgIC8vIG1ha2UgYXJyYXkgb2YgaW52ZXJzaW9uc1xuICAgICAgICAgICAgICAgIHZhciBpbnZBcnJheSA9IGFycmF5Lm1hcChmdW5jdGlvbihudW0sIGkpIHtcbiAgICAgICAgICAgICAgICAgICAgdmFyIGludmVyc2lvbnMgPSAwO1xuICAgICAgICAgICAgICAgICAgICBmb3IgKGogPSBpICsgMTsgaiA8IGFycmF5Lmxlbmd0aDsgaisrKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICBpZiAoYXJyYXlbal0gJiYgYXJyYXlbal0gPCBudW0pIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnZlcnNpb25zICs9IDE7XG4gICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIGludmVyc2lvbnM7XG4gICAgICAgICAgICAgICAgfSk7XG4gICAgICAgICAgICAgICAgLy8gcmV0dXJuIHN1bSBvZiBpbnZlcnNpb25zIGFycmF5XG4gICAgICAgICAgICAgICAgcmV0dXJuIGludkFycmF5LnJlZHVjZShmdW5jdGlvbihhLCBiKSB7XG4gICAgICAgICAgICAgICAgICAgIHJldHVybiBhICsgYjtcbiAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLy8gZmlzY2hlci15YXRlcyBzaHVmZmxlIGFsZ29yaXRobVxuICAgICAgICAgICAgZnVuY3Rpb24gZmlzY2hlcllhdGVzKGFycmF5KSB7XG4gICAgICAgICAgICAgICAgdmFyIGNvdW50ZXIgPSBhcnJheS5sZW5ndGgsIHRlbXAsIGluZGV4O1xuXG4gICAgICAgICAgICAgICAgLy8gV2hpbGUgdGhlcmUgYXJlIGVsZW1lbnRzIGluIHRoZSBhcnJheVxuICAgICAgICAgICAgICAgIHdoaWxlIChjb3VudGVyID4gMCkge1xuICAgICAgICAgICAgICAgICAgICAvLyBQaWNrIGEgcmFuZG9tIGluZGV4XG4gICAgICAgICAgICAgICAgICAgIGluZGV4ID0gTWF0aC5mbG9vcihNYXRoLnJhbmRvbSgpICogY291bnRlcik7XG4gICAgICAgICAgICAgICAgICAgIC8vIERlY3JlYXNlIGNvdW50ZXIgYnkgMVxuICAgICAgICAgICAgICAgICAgICBjb3VudGVyLS07XG4gICAgICAgICAgICAgICAgICAgIC8vIEFuZCBzd2FwIHRoZSBsYXN0IGVsZW1lbnQgd2l0aCBpdFxuICAgICAgICAgICAgICAgICAgICB0ZW1wID0gYXJyYXlbY291bnRlcl07XG4gICAgICAgICAgICAgICAgICAgIGFycmF5W2NvdW50ZXJdID0gYXJyYXlbaW5kZXhdO1xuICAgICAgICAgICAgICAgICAgICBhcnJheVtpbmRleF0gPSB0ZW1wO1xuICAgICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAgIHJldHVybiBhcnJheTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLy8gRmlzY2hlci1ZYXRlcyBzaHVmZmxlXG4gICAgICAgICAgICBhcnJheSA9IGZpc2NoZXJZYXRlcyhhcnJheSk7XG5cbiAgICAgICAgICAgIC8vIGNoZWNrIGZvciBldmVuIG51bWJlciBvZiBpbnZlcnNpb25zXG4gICAgICAgICAgICBpZiAoY291bnRJbnZlcnNpb25zKGFycmF5KSAlIDIgIT09IDApIHtcbiAgICAgICAgICAgICAgICAvLyBzd2l0Y2ggdHdvIHRpbGVzIGlmIG9kZFxuICAgICAgICAgICAgICAgIGFycmF5ID0gc3dpdGNoVGlsZXMoYXJyYXkpO1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICByZXR1cm4gYXJyYXk7XG4gICAgICAgIH0sXG4gICAgICAgIGdldEluaXRpYWxTdGF0ZTogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICByZXR1cm4ge1xuICAgICAgICAgICAgICAgIC8vIGluaXRpYWwgc3RhdGUgb2YgZ2FtZSBib2FyZFxuICAgICAgICAgICAgICAgIHRpbGVzOiB0aGlzLnNodWZmbGUoW1xuICAgICAgICAgICAgICAgICAgICAxLDIsMyxcbiAgICAgICAgICAgICAgICAgICAgNCw1LDYsXG4gICAgICAgICAgICAgICAgICAgIDcsOCwnJ1xuICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgIHdpbjogZmFsc2VcbiAgICAgICAgICAgIH07XG4gICAgICAgIH0sXG4gICAgICAgIGNoZWNrQm9hcmQ6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgdmFyIHRpbGVzID0gdGhpcy5zdGF0ZS50aWxlcztcblxuICAgICAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCB0aWxlcy5sZW5ndGgtMTsgaSsrKSB7XG4gICAgICAgICAgICAgICAgaWYgKHRpbGVzW2ldICE9PSBpKzEpIHJldHVybiBmYWxzZTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgcmV0dXJuIHRydWU7XG4gICAgICAgIH0sXG4gICAgICAgIHRpbGVDbGljazogZnVuY3Rpb24odGlsZUVsLCBwb3NpdGlvbiwgc3RhdHVzKSB7XG4gICAgICAgICAgICB2YXIgdGlsZXMgPSB0aGlzLnN0YXRlLnRpbGVzO1xuICAgICAgICAgICAgLy8gUG9zc2libGUgbW92ZXNcbiAgICAgICAgICAgIC8vIFt1cCxyaWdodCxkb3duLGxlZnRdXG4gICAgICAgICAgICAvLyA5ID0gb3V0IG9mIGJvdW5kc1xuICAgICAgICAgICAgdmFyIG1vdmVzID0gW1xuICAgICAgICAgICAgICAgIFtudWxsLDEsMyxudWxsXSxbbnVsbCwyLDQsMF0sW251bGwsbnVsbCw1LDFdLFxuICAgICAgICAgICAgICAgIFswLDQsNixudWxsXSwgICBbMSw1LDcsM10sICAgWzIsbnVsbCw4LDRdLFxuICAgICAgICAgICAgICAgIFszLDcsbnVsbCxudWxsXSxbNCw4LG51bGwsNl0sWzUsbnVsbCxudWxsLDddXG4gICAgICAgICAgICBdO1xuXG4gICAgICAgICAgICBmdW5jdGlvbiBhbmltYXRlVGlsZXMoaSwgbW92ZSkge1xuICAgICAgICAgICAgICAgIHZhciBkaXJlY3Rpb25zID0gWyd1cCcsJ3JpZ2h0JywnZG93bicsJ2xlZnQnXTtcbiAgICAgICAgICAgICAgICB2YXIgbW92ZVRvRWwgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcudGlsZTpudGgtY2hpbGQoJyArIChtb3ZlICsgMSkgKyAnKScpO1xuICAgICAgICAgICAgICAgIGRpcmVjdGlvbiA9IGRpcmVjdGlvbnNbaV07XG4gICAgICAgICAgICAgICAgdGlsZUVsLmNsYXNzTGlzdC5hZGQoJ21vdmUtJyArIGRpcmVjdGlvbik7XG4gICAgICAgICAgICAgICAgLy8gdGhpcyBpcyBhbGwgYSBsaXR0bGUgaGFja2lzaC5cbiAgICAgICAgICAgICAgICAvLyBjc3MvanMgYXJlIHVzZWQgdG9nZXRoZXIgdG8gY3JlYXRlIHRoZSBpbGx1c2lvbiBvZiBtb3ZpbmcgYmxvY2tzXG4gICAgICAgICAgICAgICAgc2V0VGltZW91dChmdW5jdGlvbigpIHtcbiAgICAgICAgICAgICAgICAgICAgbW92ZVRvRWwuY2xhc3NMaXN0LmFkZCgnaGlnaGxpZ2h0Jyk7XG4gICAgICAgICAgICAgICAgICAgIHRpbGVFbC5jbGFzc0xpc3QucmVtb3ZlKCdtb3ZlLScgKyBkaXJlY3Rpb24pO1xuICAgICAgICAgICAgICAgICAgICAvLyB0aW1lIGhvcnJpYmx5IGxpbmtlZCB3aXRoIGNzcyB0cmFuc2l0aW9uXG4gICAgICAgICAgICAgICAgICAgIHNldFRpbWVvdXQoZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICBtb3ZlVG9FbC5jbGFzc0xpc3QucmVtb3ZlKCdoaWdobGlnaHQnKTtcbiAgICAgICAgICAgICAgICAgICAgfSwgNDAwKTtcbiAgICAgICAgICAgICAgICB9LCAyMDApO1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAvLyBjYWxsZWQgYWZ0ZXIgdGlsZSBpcyBmdWxseSBtb3ZlZFxuICAgICAgICAgICAgLy8gc2V0cyBuZXcgc3RhdGVcbiAgICAgICAgICAgIGZ1bmN0aW9uIGFmdGVyQW5pbWF0ZSgpIHtcbiAgICAgICAgICAgICAgICB0aWxlc1twb3NpdGlvbl0gPSAnJztcbiAgICAgICAgICAgICAgICB0aWxlc1ttb3ZlXSA9IHN0YXR1cztcbiAgICAgICAgICAgICAgICB0aGlzLnNldFN0YXRlKHtcbiAgICAgICAgICAgICAgICAgICAgdGlsZXM6IHRpbGVzLFxuICAgICAgICAgICAgICAgICAgICBtb3ZlczogbW92ZXMsXG4gICAgICAgICAgICAgICAgICAgIHdpbjogdGhpcy5jaGVja0JvYXJkKClcbiAgICAgICAgICAgICAgICB9KTtcbiAgICAgICAgICAgIH07XG5cbiAgICAgICAgICAgIC8vIHJldHVybiBpZiB0aGV5J3ZlIGFscmVhZHkgd29uXG4gICAgICAgICAgICBpZiAodGhpcy5zdGF0ZS53aW4pIHJldHVybjtcblxuICAgICAgICAgICAgLy8gY2hlY2sgcG9zc2libGUgbW92ZXNcbiAgICAgICAgICAgIGZvciAodmFyIGkgPSAwOyBpIDwgbW92ZXNbcG9zaXRpb25dLmxlbmd0aDsgaSsrKSB7XG4gICAgICAgICAgICAgICAgdmFyIG1vdmUgPSBtb3Zlc1twb3NpdGlvbl1baV07XG4gICAgICAgICAgICAgICAgLy8gaWYgYW4gYWRqYWNlbnQgdGlsZSBpcyBlbXB0eVxuICAgICAgICAgICAgICAgIGlmICh0eXBlb2YgbW92ZSA9PT0gJ251bWJlcicgJiYgIXRpbGVzW21vdmVdKSB7XG4gICAgICAgICAgICAgICAgICAgIGFuaW1hdGVUaWxlcyhpLCBtb3ZlKTtcbiAgICAgICAgICAgICAgICAgICAgc2V0VGltZW91dChhZnRlckFuaW1hdGUuYmluZCh0aGlzKSwgMjAwKTtcbiAgICAgICAgICAgICAgICAgICAgYnJlYWs7XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICB9LFxuICAgICAgICByZXN0YXJ0R2FtZTogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICB0aGlzLnNldFN0YXRlKHRoaXMuZ2V0SW5pdGlhbFN0YXRlKCkpO1xuICAgICAgICB9LFxuICAgICAgICByZW5kZXI6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgcmV0dXJuIDxkaXY+XG4gICAgICAgICAgICAgICAgPGRpdiBpZD1cImdhbWUtYm9hcmRcIj5cbiAgICAgICAgICAgICAgICAgICAge3RoaXMuc3RhdGUudGlsZXMubWFwKGZ1bmN0aW9uKHRpbGUsIHBvc2l0aW9uKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gKCA8VGlsZSBzdGF0dXM9e3RpbGV9IGtleT17cG9zaXRpb259IHRpbGVDbGljaz17dGhpcy50aWxlQ2xpY2t9IC8+ICk7XG4gICAgICAgICAgICAgICAgICAgIH0sIHRoaXMpfVxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICAgIDxNZW51IHdpbkNsYXNzPXt0aGlzLnN0YXRlLndpbiA/ICdidXR0b24gd2luJyA6ICdidXR0b24nfSBzdGF0dXM9e3RoaXMuc3RhdGUud2luID8gJ1lvdSB3aW4hJyA6ICdTb2x2ZSB0aGUgcHV6emxlLid9IHJlc3RhcnQ9e3RoaXMucmVzdGFydEdhbWV9IC8+XG4gICAgICAgICAgICA8L2Rpdj47XG4gICAgICAgIH1cbiAgICB9KTtcblxuICAgIHZhciBUaWxlID0gUmVhY3QuY3JlYXRlQ2xhc3Moe1xuICAgICAgICBjbGlja0hhbmRsZXI6IGZ1bmN0aW9uKGUpIHtcbiAgICAgICAgICAgIHRoaXMucHJvcHMudGlsZUNsaWNrKGUudGFyZ2V0LCB0aGlzLnByb3BzLmtleSwgdGhpcy5wcm9wcy5zdGF0dXMpO1xuICAgICAgICB9LFxuICAgICAgICByZW5kZXI6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgcmV0dXJuIDxkaXYgY2xhc3NOYW1lPVwidGlsZVwiIG9uQ2xpY2s9e3RoaXMuY2xpY2tIYW5kbGVyfT57dGhpcy5wcm9wcy5zdGF0dXN9PC9kaXY+O1xuICAgICAgICB9XG4gICAgfSk7XG5cbiAgICB2YXIgTWVudSA9IFJlYWN0LmNyZWF0ZUNsYXNzKHtcbiAgICAgICAgY2xpY2tIYW5kbGVyOiBmdW5jdGlvbigpIHtcbiAgICAgICAgICAgIHRoaXMucHJvcHMucmVzdGFydCgpO1xuICAgICAgICB9LFxuICAgICAgICByZW5kZXI6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgcmV0dXJuIDxkaXYgaWQ9XCJtZW51XCI+XG4gICAgICAgICAgICAgICAgPGgzIGlkPVwic3VidGl0bGVcIj57dGhpcy5wcm9wcy5zdGF0dXN9PC9oMz5cbiAgICAgICAgICAgICAgICA8YSBjbGFzc05hbWU9e3RoaXMucHJvcHMud2luQ2xhc3N9IG9uQ2xpY2s9e3RoaXMuY2xpY2tIYW5kbGVyfT5TaHVmZmxlPC9hPlxuICAgICAgICAgICAgPC9kaXY+O1xuICAgICAgICB9XG4gICAgfSk7XG5cbiAgICAvLyByZW5kZXIgR2FtZSB0byBjb250YWluZXJcbiAgICBSZWFjdC5yZW5kZXJDb21wb25lbnQoXG4gICAgICAgIDxHYW1lIC8+LFxuICAgICAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZ2FtZS1jb250YWluZXInKVxuICAgICk7XG5cbn0oKSk7XG4iXX0=</script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body class="specification"><div id="MathJax_Message" style="display: none;"></div>
+
+
+<div id="nav2">
+<a href="https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/specification.php" id="logo"> <img src="./specification_files/logo.png"> Slider Puzzle</a>
+<ul id="links">
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/specification.php" id="here">Spec</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/faq.php">FAQ</a></li>
+<li><a href="https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/8puzzle.zip">Project</a></li>
+<li><a href="https://www.coursera.org/learn/algorithms-part1/programming/iqOQi/8-puzzle/submission" target="_blank">Submit</a></li>
+</ul>
+</div>
+
+Write a program to solve the 8-puzzle problem
+(and its natural generalizations) using the 
+A* search algorithm.
+
+<div class="container">
+    <div id="game-container"><div data-reactid=".0"><div id="game-board" data-reactid=".0.0"><div class="tile" data-reactid=".0.0.$0">2</div><div class="tile" data-reactid=".0.0.$1">7</div><div class="tile" data-reactid=".0.0.$2">4</div><div class="tile" data-reactid=".0.0.$3">6</div><div class="tile" data-reactid=".0.0.$4">1</div><div class="tile" data-reactid=".0.0.$5">5</div><div class="tile" data-reactid=".0.0.$6">3</div><div class="tile" data-reactid=".0.0.$7"></div><div class="tile" data-reactid=".0.0.$8">8</div></div><div id="menu" data-reactid=".0.1"><h3 id="subtitle" data-reactid=".0.1.0">Solve the puzzle.</h3><a class="button" data-reactid=".0.1.1">Shuffle</a></div></div></div>
+</div>
+<script type="text/jsx" src="./specification_files/8puzzle.js.下载"></script>
+
+<p><b>The problem.</b>
+The <a href="http://en.wikipedia.org/wiki/Fifteen_puzzle">8-puzzle</a>
+is a sliding puzzle
+<!--  invented and popularized by Noyes Palmer Chapman in the 1870s. -->
+that is played on a 3-by-3 grid with 8 square tiles labeled 1 through 8, plus a blank 
+square. The goal is to rearrange the tiles so that they are in row-major order, using
+as few moves as possible. 
+You are permitted to slide tiles either horizontally or vertically
+into the blank square. 
+The following diagram
+shows a sequence of moves from an <em>initial board</em> (left)
+to the <em>goal board</em> (right).
+
+</p><p></p><center>
+<img src="./specification_files/4moves.png" width="600" alt="8puzzle 4 moves">
+</center>
+
+<p><br><b>Board data type.</b>
+To begin, create a data type that models an <em>n</em>-by-<em>n</em>
+board with sliding tiles.
+Implement an immutable data type <code>Board</code> with the following API:
+
+</p><p>
+
+</p><blockquote><pre class="api">public class Board {
+
+    <span class="comment">// create a board from an n-by-n array of tiles,</span>
+    <span class="comment">// where tiles[row][col] = tile at (row, col)</span>
+    public Board(int[][] tiles)
+                                           
+    <span class="comment">// string representation of this board</span>
+    public String toString()
+
+    <span class="comment">// board dimension n</span>
+    public int dimension()
+
+    <span class="comment">// number of tiles out of place</span>
+    public int hamming()
+
+    <span class="comment">// sum of Manhattan distances between tiles and goal</span>
+    public int manhattan()
+
+    <span class="comment">// is this board the goal board?</span>
+    public boolean isGoal()
+
+    <span class="comment">// does this board equal y?</span>
+    public boolean equals(Object y)
+
+    <span class="comment">// all neighboring boards</span>
+    public Iterable&lt;Board&gt; neighbors()
+
+    <span class="comment">// a board that is obtained by exchanging any pair of tiles</span>
+    public Board twin()
+
+    <span class="comment">// unit testing (not graded)</span>
+    public static void main(String[] args)
+
+}</pre></blockquote>
+
+<p><em>Constructor.&nbsp;</em>
+You may assume that the constructor receives an <em>n</em>-by-<em>n</em> array
+containing the <em>n</em><sup>2</sup> integers between 0 and <em>n</em><sup>2</sup> − 1,
+where 0 represents the blank square.
+You may also assume that 2 ≤ <em>n</em> &lt; 128.
+
+</p><p><em>String representation.&nbsp;</em>
+The <code>toString()</code> method returns a string composed of <em>n</em> + 1 lines.
+The first line contains the board size <em>n</em>; the remaining <em>n</em> lines contains
+the <em>n</em>-by-<em>n</em> grid of tiles in row-major order,
+using 0 to designate the blank square.
+
+</p><p>
+</p><center>
+<img src="./specification_files/string-representation.png" width="225" alt="String representation">
+</center>
+
+<p><em>Hamming and Manhattan distances.&nbsp;</em>
+To measure how close a board is to the goal board, we define two notions of distance.
+The <em>Hamming distance</em> betweeen a board and the goal board is 
+the number of tiles in the wrong position.
+The <em>Manhattan distance</em> between a board and the goal board is
+the sum of the Manhattan distances (sum of the vertical and horizontal distance)
+from the tiles to their goal positions.
+
+</p><p>
+</p><center>
+<img src="./specification_files/hamming-manhattan.png" width="500" alt="Hamming and Manhattan distances">
+</center>
+
+<p><em>Comparing two boards for equality.&nbsp;</em>
+Two boards are equal if they are have the same size and their corresponding tiles are in the same positions.
+The <code>equals()</code> method is inherited from <code>java.lang.Object</code>,
+so it must obey all of Java’s requirements.
+
+</p><p><em>Neighboring boards.&nbsp;</em>
+The <code>neighbors()</code> method returns an iterable containing the neighbors of the board.
+Depending on the location of the blank square, a board can have 2, 3, or 4 neighbors.
+
+</p><p>
+</p><center>
+<img src="./specification_files/neighbors3.png" width="400" alt="Neighboring boards">
+</center>
+
+<p><em>Unit testing.&nbsp;</em>
+Your <code>main()</code> method should call each public method directly and
+help verify that they works as prescribed (e.g., by printing results to standard output).
+
+</p><p><em>Performance requirements.&nbsp;</em>
+Your implementation should support all <code>Board</code> methods in time
+proportional to <em>n</em><sup>2</sup> (or better) in the worst case.
+
+
+
+
+
+
+
+
+</p><p>
+<b>A* search.</b>
+Now, we describe a solution to the 8-puzzle problem that illustrates a 
+general artificial intelligence methodology known as the
+<a href="http://en.wikipedia.org/wiki/A*_search_algorithm">A* search algorithm</a>.
+We define a <em>search node</em> of the game to be a board, the number
+of moves made to reach the board, and the previous search node.
+First, insert the initial search node
+(the initial board, 0 moves, and a null previous search node) 
+into a priority queue. Then,
+delete from the priority queue the search node with the minimum priority,
+and insert onto the priority queue all neighboring search nodes
+(those that can be reached in one move from the dequeued search node).
+Repeat this procedure until the search node dequeued corresponds to the goal board.
+
+</p><p>
+The efficacy of this approach
+hinges on the choice of <em>priority function</em> for a search node. We 
+consider two priority functions:
+
+</p><ul>
+
+<li>The <em>Hamming priority function</em>
+is the Hamming distance of a board plus 
+the number of moves made so far to get to the search node.
+Intuitively, a search node with a small number of tiles in the wrong position
+is close to the goal, and we prefer a search node if has been reached
+using a small number of moves.
+
+<p></p></li><li> The <em>Manhattan priority function</em> is
+the Manhattan distance of a board
+plus the number of moves made so far to get to the search node.
+
+</li></ul>
+
+<p>
+To solve the puzzle from
+a given search node on the priority queue, the total number of moves we
+need to make (including those already made) is at least its priority,
+using either the Hamming or Manhattan priority function. Why?
+<!--
+(For Hamming priority, this is true because each tile that is out of place
+must move at least once to reach its goal position.
+For Manhattan priority, this is true because each tile must move
+its Manhattan distance from its goal position.
+Note that we do not count the blank square when computing the
+Hamming or Manhattan priorities.)
+-->
+Consequently, when the goal board is dequeued, we
+have discovered not only a sequence of moves from the
+initial board to the goal board, but one that makes the <em>fewest</em> moves. 
+(Challenge for the mathematically inclined: prove this fact.)
+
+</p><p><b>Game tree.</b>
+One way to view the computation is as a <em>game tree</em>, where each search node
+is a node in the game tree and the children of a node correspond to its
+neighboring search nodes. The root of the game tree is the initial search node;
+the internal nodes have already been processed; the leaf nodes are maintained
+in a <em>priority queue</em>; at each step, the A* algorithm removes the node with the smallest
+priority from the priority queue and processes it (by adding its children
+to both the game tree and the priority queue).
+
+</p><p>
+For example, the following diagram illustrates the game tree after each of the 
+first three steps of running the A* search algorithm on a 3-by-3 puzzle using the Manhattan priority function.
+
+</p><center>
+<img src="./specification_files/game-tree.png" width="800" alt="8puzzle game tree">
+</center>
+
+
+
+<p><br><b>Solver data type.</b>
+In this part, you will implement A* search to solve <em>n</em>-by-<em>n</em> slider puzzles.
+Create an immutable data type <code>Solver</code> with the following API:
+
+</p><blockquote>
+<pre class="api">public class Solver {
+
+    <span class="comment">// find a solution to the initial board (using the A* algorithm)</span>
+    public Solver(Board initial)
+
+    <span class="comment">// is the initial board solvable? (see below)</span>
+    public boolean isSolvable()
+
+    <span class="comment">// min number of moves to solve initial board</span>
+    public int moves()
+
+    <span class="comment">// sequence of boards in a shortest solution</span>
+    public Iterable&lt;Board&gt; solution()
+
+    <span class="comment">// test client (see below)</span> 
+    public static void main(String[] args)
+
+}
+</pre>
+</blockquote>
+
+<p><em>Implementation requirement.&nbsp;</em>
+To implement the A* algorithm, 
+you must use the
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/MinPQ.html"><code>MinPQ</code></a>
+data type for the priority queue.
+
+</p><p><em>Corner case.&nbsp;</em>
+Throw an <code>IllegalArgumentException</code> in the constructor if the argument is 
+<code>null</code>.
+
+</p><p><em>Test client.</em>
+The following test client takes the name of an input file as a command-line argument
+and prints the minimum number of moves to solve the puzzle and a corresponding solution.
+
+
+</p><blockquote><pre>public static void main(String[] args) {
+
+    <font color="gray">// create initial board from file</font>
+    In in = new In(args[0]);
+    int n = in.readInt();
+    int[][] tiles = new int[n][n];
+    for (int i = 0; i &lt; n; i++)
+        for (int j = 0; j &lt; n; j++)
+            tiles[i][j] = in.readInt();
+    Board initial = new Board(tiles);
+
+    <font color="gray">// solve the puzzle</font>
+    Solver solver = new Solver(initial);
+
+    <font color="gray">// print solution to standard output</font>
+    if (!solver.isSolvable())
+        StdOut.println("No solution possible");
+    else {
+        StdOut.println("Minimum number of moves = " + solver.moves());
+        for (Board board : solver.solution())
+            StdOut.println(board);
+    }
+}
+</pre>
+</blockquote>
+
+The input file contains the board size <em>n</em>, followed by the <em>n</em>-by-<em>n</em>
+grid of tiles, using 0 to designate the blank square.
+
+<p>
+<table>
+<tbody><tr>
+<td valign="top">
+<pre class="terminal"><span class="prompt">~/Desktop/8puzzle&gt;</span> <span class="command">cat puzzle04.txt</span>
+3
+ 0  1  3
+ 4  2  5
+ 7  8  6
+
+<span class="prompt">~/Desktop/8puzzle&gt;</span> <span class="command">java-algs4 Solver puzzle04.txt</span>
+Minimum number of moves = 4
+3
+ 0  1  3 
+ 4  2  5 
+ 7  8  6 
+
+3
+ 1  0  3 
+ 4  2  5 
+ 7  8  6 
+
+3
+ 1  2  3 
+ 4  0  5 
+ 7  8  6 
+
+3
+ 1  2  3 
+ 4  5  0   
+ 7  8  6 
+
+3
+ 1  2  3 
+ 4  5  6 
+ 7  8  0
+</pre>
+</td>
+<td valign="top">
+<pre class="terminal"><span class="prompt">~/Desktop/8puzzle&gt;</span> <span class="command">cat puzzle3x3-unsolvable.txt</span>
+3
+ 1  2  3
+ 4  5  6
+ 8  7  0
+
+Unsolvable puzzle
+</pre>
+</td>
+</tr></tbody></table>
+
+
+
+
+<span id="optimizations"></span>
+</p><p><b>Two optimizations.</b>
+To speed up your solver, implement the following two optimizations:
+
+</p><ul>
+<p></p><li><em>The critical optimization.</em>
+A* search has one annoying feature:
+search nodes corresponding to the same board
+are enqueued on the priority queue many times
+(e.g., the bottom-left search node in the game-tree diagram above).
+To reduce unnecessary exploration of useless search nodes,
+when considering the neighbors of a search node, don’t enqueue
+a neighbor if its board is the same as the board of the
+previous search node in the game tree.
+
+<p></p><center>
+<img src="./specification_files/critical-optimization.png" width="600" alt="8puzzle critical optimization">
+</center>
+
+<p></p></li><li><em>Caching the Hamming and Manhattan priorities.</em>
+To avoid recomputing the Manhattan priority of a search node from scratch each time during
+various priority queue operations, pre-compute its value when you construct the search node;
+save it in an instance variable; and return the saved value as needed.
+This caching technique is broadly applicable: consider using it in any situation where you
+are recomputing the same quantity many times and for which computing that quantity is a bottleneck 
+operation.
+
+</li></ul>
+
+
+<p><b>Detecting unsolvable boards.</b>
+Not all initial boards can lead to the goal board by a sequence of moves,
+including these two:
+
+</p><p></p><center>
+<img src="./specification_files/unsolvable.png" width="250" alt="unsolvable slider puzzles">
+</center>
+
+<p>
+To detect such situations,
+use the fact that boards
+are divided into two equivalence classes with respect to reachability:
+</p><ul>
+<p></p><li> Those that can lead to the goal board
+<p></p></li><li> Those that can lead to the goal board if we modify the initial board by
+swapping any pair of tiles (the blank square is not a tile).
+</li></ul>
+
+(Difficult challenge for the mathematically inclined: prove this fact.)
+To apply the fact, 
+run the A* algorithm on <em>two</em> puzzle instances—one with the
+initial board and one with the initial board modified by
+swapping a pair of tiles—in lockstep
+(alternating back and forth between exploring search nodes in each of
+the two game trees).
+Exactly one of the two will lead to the goal board.
+
+<!--
+<p><li> Derive a mathematical formula that tells you whether a board is 
+solvable or not.
+
+</ul>
+-->
+
+
+
+
+<p><b>Web submission.</b>
+Submit a .zip file containing only
+<code>Board.java</code> and <code>Solver.java</code> (with the Manhattan priority).
+We will supply <code>algs4.jar</code>.
+You may not call any library functions other those in
+<code>java.lang</code>, <code>java.util</code>, and <code>algs4.jar</code>.
+You must use 
+<a href="https://algs4.cs.princeton.edu/code/javadoc/edu/princeton/cs/algs4/MinPQ.html"><code>MinPQ</code></a>
+for the priority queue(s).
+
+
+
+</p><p><br>
+
+
+</p><address><small>
+This assignment was developed by Bob Sedgewick and Kevin Wayne.
+<br>Copyright © 2008.
+</small>
+</address>
+
+
+</body><style id="stylus-8" type="text/css" class="stylus">::-webkit-scrollbar{width:6px!important;height:6px!important;}
+body::-webkit-scrollbar{width:6 px!important;height:6px!important;}
+
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.22)!important;border-radius:8px!important;}
+
+
+::-webkit-scrollbar-thumb{background-color:#343434 !important;min-height:50px;border-radius:5px!important;}
+
+
+@keyframes fadein {
+0% {opacity: 0;}
+100% {}
+}
+
+body {
+animation-name: fadein;
+animation-duration: 0.4s;
+}scrollbar *
+  scrollbar scrollbarbutton{visibility:collapse!important;}
+  scrollbar scrollbarbutton{display:none!important;}
+ 
+  scrollbar[orient="vertical"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;min-width:2px!important;max-width:2px!important;border-radius:5px;}
+  scrollbar[orient="vertical"]:hover{-moz-appearance:none!important;}
+  scrollbar thumb[orient="vertical"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:25px!important;min-width:2px!important;max-width:2px!important;border:1px!important;opacity:0.87;}
+  scrollbar thumb[orient="vertical"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+  
+  scrollbar[orient="horizontal"]{background:rgba(255,255,255,0.22) url(https://pbs.twimg.com/media/CKecQtCWoAA8keI.png)!important;-moz-appearance:none!important;background-color:transparent!important;opacity:.75!important;min-height:2px!important;max-height:9px!important;border-radius:5px;}
+  scrollbar[orient="horizontal"]:hover{-moz-appearance:none!important;background-color:transparent!important;min-height:9px!important;max-height:9px!important}
+  scrollbar thumb[orient="horizontal"]{background:#6B6B6B!important;-moz-appearance:none!important;border-radius:4px!important;min-height:7px!important;max-height:7px!important;border:1px!important;margin-left:0px!important;opacity:0.87;}
+  scrollbar thumb[orient="horizontal"]:hover{background:#6B6B6B!important;border-radius:4px!important;border:0px!important;opacity:1;}
+
+scrollcorner{opacity:0!important}
+scrollbar scrollcorner:hover{background:transparent!important}</style></html>
