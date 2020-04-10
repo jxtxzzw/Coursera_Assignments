@@ -1,0 +1,11 @@
+score_challenge: Your function returns an incorrect result when the sum is greater than the goal, and the hand contains cards of both colors (ace = 11). [incorrect answer]
+score_challenge: Your function returns an incorrect result when the sum is greater than the goal, and the hand contains cards of both colors (ace = 1). [incorrect answer]
+officiate_challenge: Your function returns an incorrect result when the game should end due to the sum of cards in the player's hand exceeding the goal. [incorrect answer]
+officiate_challenge: Your function returns an incorrect result when an ace is in the players hand. [incorrect answer]
+officiate_challenge: Your function returns an incorrect result when the game should end due to an empty move list with low score. [incorrect answer]
+careful_player: Your function returns an incorrect result when given a hand of [(Spades,Num 7),(Hearts,King),(Clubs,Ace),(Diamonds,Num 2)] and a goal of 18 [incorrect answer]
+careful_player: Your function returns an incorrect result when given a hand of [(Diamonds,Num 2),(Clubs,Ace)] and a goal of 11 [incorrect answer]
+
+Because the auto-grader gave a score above 80, here is the link to a message from a very cute dog: https://drive.google.com/file/d/0B5sUgbs6aDNpN2ppTUpyVDlQX0U/view?pref=2&pli=1
+
+With extra credit you received 102.47999999999999%!  Grade capped at 100%
