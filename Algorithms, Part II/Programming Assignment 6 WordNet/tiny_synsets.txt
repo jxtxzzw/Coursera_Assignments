@@ -1,3 +1,0 @@
-0,WordNet Princeton_WordNet,a machine-readable lexical database organized by meanings; developed at Princeton University
-1,WordNet3.1,the latest publicly released version of WordNet
-2,wordnet,any of the machine-readable lexical databases modeled after the Princeton WordNet
