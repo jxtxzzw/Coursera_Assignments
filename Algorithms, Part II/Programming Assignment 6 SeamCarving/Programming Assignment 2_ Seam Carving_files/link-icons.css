@@ -1,0 +1,415 @@
+a[href*='introcs.cs.princeton.edu'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/introcs-booksite.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+/*
+a[href*='algs4.cs.princeton.edu'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/algs4-booksite.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+*/
+a[href*='algs4.jar'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/algs4-booksite.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+
+a[href*='java_visualize'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/java-visualizer.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href$='.pdf'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/pdf.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+
+a[href$='specification.html'],
+a[href$='specification.php'],
+a[href$='assignment.html'],
+a[href$='assignment.php'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/spec.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+
+a[href$='checklist.html'], 
+a[href$='checklist.php'] {  
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/checklist.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12.5px auto;
+}
+
+a[href$='faq.php'] {  
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/faq.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12.5px auto;
+}
+
+a[href$='.mp4'],
+a[href$='.m4v'],
+a[href$='.mov'],
+a[href$='watch'],
+a[href*='youtu.be'],
+a[href*='youtube.com'] {
+  padding: 5px 17px 5px 0px;
+  background: transparent
+  url("icons/video.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12.5px auto;
+}
+
+a[href*='salon.cs.princeton.edu'] {
+  padding: 5px 17px 5px 0px;
+  background: transparent
+  url("icons/salon.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href*='us.edstem.org'] {
+  padding: 5px 17px 5px 0px;
+  background: transparent
+  url("icons/ed.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+  
+a[href*='cuvids.io'] {   
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/cuvids.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href*='zoom.us'] {   
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/zoom.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href$='.ppt'],
+a[href$='.pptx'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/powerpoint.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href$='.doc'],
+a[href$='.docx'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/word.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href*='algs4.cs.princeton.edu/code/javadoc/'],
+a[href$='.java.html'],
+a[href$='.java'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/java.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+
+a[href*='oracle.com'],
+a[href*='jdk.java.net'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/java.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+
+a[href*='websheets'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/websheets.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href$='.zip'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/zip.png")
+  no-repeat center right;
+  border-right: 3px solid transparent;
+  background-size: 12px auto;
+}
+
+/* put after .zip entry to override */
+a[href$='COS126.zip'],
+a[href$='COS226.zip'] {
+  padding: 5px 20px 5px 20px;
+  background: transparent
+  url("icons/pu-shield.png")
+  no-repeat center left;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+/* put after .zip entry to override */
+a[href$='CS201.zip'] {
+  padding: 5px 20px 5px 20px;
+  background: transparent
+  url("icons/duke-shield.png")
+  no-repeat center left;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+a[href$='lift-java.exe'],
+a[href$='.pkg'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  /* url("icons/pkg.png") */
+  url("icons/pu-shield.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href*='tigerfile.cs.princeton.edu'],
+a[href*='dropbox.cs.princeton.edu'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/paw.png")
+  no-repeat center right;
+  border-right: 0px solid transparent;
+  background-size: auto 11.5px;
+}
+
+a[href*='dropbox.cs.princeton.edu'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/dropbox.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: auto 15px;
+}
+
+/* this must be after a[href*='dropbox.cs.princeton.edu'] */
+a[href$='leaderboard.html'],
+a[href$='leaderboard.php'],
+a[href$='_Leaderboard'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/leaderboard.png")
+  no-repeat center right;
+  border-right: 4px solid transparent;
+  background-size: auto 12px;
+}
+
+a[href*='piazza.com'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/piazza.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+a[href*='blackboard.princeton.edu'] {
+  padding: 5px 25px 5px 0px;
+  background: transparent
+  url("icons/blackboard.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: auto 14px;
+}
+
+a[href^='mailto:'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/email.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+a[href*='quizzera.io'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/quiz.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+a[href*='stepik.org'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/stepik.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+a[href*='codepost.io'], a[href*='codePost.io'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/codePost.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+a[href*='gradescope.com'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/gradescope.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+a[href*='ua.princeton.edu'],
+a[href*='www.princeton.edu'],
+a[href*='registrar.princeton.edu'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/pu-shield.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href*='iclicker.com'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/iclicker.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+
+a[href*='lift.cs.princeton.edu/java/windows'],
+a[href*='algs4.cs.princeton.edu/windows'],
+a[href*='introcs.cs.princeton.edu/java/windows'] {
+  padding: 5px 16px 5px 0px;
+  background: transparent
+  url("icons/windows.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 11px auto;
+}
+
+a[href*='lift.cs.princeton.edu/java/mac'],
+a[href*='algs4.cs.princeton.edu/mac'],
+a[href*='introcs.cs.princeton.edu/java/mac'] {
+  padding: 5px 16px 5px 0px;
+  background: transparent
+  url("icons/apple.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 11px auto;
+}
+
+a[href*='lift.cs.princeton.edu/java/linux'],
+a[href*='algs4.cs.princeton.edu/linux'],
+a[href*='introcs.cs.princeton.edu/java/linux'] {
+  padding: 5px 16px 5px 0px;
+  background: transparent
+  url("icons/linux.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+
+a[href$='.xml'] {
+  padding: 5px 18px 5px 0px;
+  background: transparent
+  url("icons/xml.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 14px auto;
+}
+
+
+/*
+a[href*='amazon.com'],
+a[href*='amzn.to'] {
+  padding: 5px 16px 5px 0px;
+  background: transparent
+  url("icons/amazon.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+*/
+
+a[href*='coursera.org'] {
+  padding: 5px 16px 5px 0px;
+  background: transparent
+  url("icons/coursera.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 13px auto;
+}
+
+a[href*='sublimetext.com'] {
+  padding: 5px 20px 5px 0px;
+  background: transparent
+  url("icons/sublime.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 12px auto;
+}
+
+a[href*='IntroCS.zip'],
+a[href*='jetbrains.com'] {
+  padding: 5px 22px 5px 0px;
+  background: transparent
+  url("icons/intellij.png")
+  no-repeat center right;
+  border-right: 2px solid transparent;
+  background-size: 15px auto;
+}

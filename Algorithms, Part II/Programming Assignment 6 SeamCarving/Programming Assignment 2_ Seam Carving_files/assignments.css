@@ -1,0 +1,237 @@
+tr.border_bottom th, tr.border_bottom td {
+  border-bottom:0.75pt solid black;
+}
+
+tr {
+    font-size: 10pt;
+}
+tr code {
+    font-size: 9pt;
+}
+th {
+    font-size: 11pt;
+    font-weight: normal;
+    font-style: italic;
+}
+
+body { 
+    line-height: 1.25;
+    margin-top: 90px;
+    padding: 25px 25px;
+}
+
+body.specification { 
+    background-color: white;
+}
+
+body.faq { 
+    background-color:#FFFFF5;
+}
+
+h1 {
+  font-size: 20pt;
+  text-align:center;
+}
+
+h2 {
+  font-family: Helvetica, sans-serif;
+  background-color:black;
+  color:white;
+  text-align:center;
+  line-height:175%;
+  font-variant:small-caps;
+  font-size:110%;
+  font-weight:bold;
+  margin-top:30px;
+  margin-bottom:30px;
+}
+
+@media print {
+    #nav2 {
+        position: absolute;
+    }
+}
+
+@media screen {
+    #nav2 {
+        position: fixed;
+    }
+}
+
+  #nav {
+    box-shadow: none;
+  }
+
+  #nav2 {
+    /* bar across the top */
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    padding: 10px 10px;
+    /* background: #FBE8E5; */ /* light shade of red */ 
+    background: #C4D0E7;  /* light shade of blue */
+    border-style: solid;
+    border-color: #C4D0E7;
+    border-width: 3px 0px 5px 0px;  /* extra vertical space for bar */
+  }
+
+  #nav2 {
+    display: table;
+  }
+
+  #nav2 #logo, #logo-noborder {
+    text-align: left;
+    display: table-cell;
+  background: none;
+  padding: 0 0 0 0;
+  }
+
+
+  #nav2 #links {
+    text-align: right;
+    display: table-cell;
+  }
+
+  #nav2 #logo img {
+    height: 45px;
+    margin-left: 24px;
+    margin-right: 17px;
+    vertical-align: middle;
+    border: 1px solid #999;
+  }
+
+  #nav2 #logo-noborder img {
+    height: 45px;
+    margin-left: 24px;
+    margin-right: 17px;
+    vertical-align: middle;
+    border: 0px solid #999;
+  }
+
+  #nav2 #logo, #logo-noborder {
+    font-size: 18pt;
+    font-variant: small-caps;
+    color: #222;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  #nav2 #links {
+    padding-left: 10px;    /* left align navigation bar with content  */
+    padding-right: 19px;   /* right align navigation bar with content */
+    vertical-align: middle;
+  }
+
+  #nav2 #links li {
+    display: inline-block;
+  }
+
+  #nav2 #links a {
+    font-size: 10pt;
+    line-height: 1;
+    font-family: 'Raleway', Helvetica, sans-serif;
+    text-decoration: none;
+    display: inline-block;
+    color: #888;
+    font-weight: bold;
+    margin: 0px 4px;
+    padding-left: 4px;    /* adjust space between links         */
+    padding-right: 19px;  /* adjust space between link and icon */
+  }
+
+  #nav2 #links a#here {
+      color: #000;
+  }
+
+  #nav2 #links a:hover {
+      color: #000;
+      text-decoration: underline;
+  }
+
+blockquote {
+    margin-left: 40px;
+    margin-right: 0px;
+}
+
+/* figures with border */
+.figure {
+    border: 0.75px solid #aaa;
+    border-radius: 3px;
+    padding: 5px;
+    margin: 0px 20px;"
+}
+
+/* code blocks */
+pre {
+    font-size: 10pt;
+    border: 0.75px solid #aaa;
+    border-radius: 3px;
+    padding: 10px 30px 10px 15px; /* size of border around code */
+    display: inline-block;        /* shrink size of box to code */
+}
+
+pre.api {
+    font-weight: bold;
+}
+
+/* gray comments, blue prompt, yellow commands */
+pre .comment { color:#999999; font-weight: normal; }
+pre .prompt  { color:#5394EC; font-weight: normal; }
+pre .command { color:#FFFF99; font-weight: normal; }
+
+/* terminal with black background and white foreground */
+pre.terminal {
+    overflow: auto;
+    /*width: 500px; */
+    line-height: 1.5;
+    font-family: Inconsolata, Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+    /* font-family: "courier new", courier, mono; */
+    font-size: 10.5px;
+    color:#EEEEEE;
+    background-color:#000000;
+    padding: 15px 50px 10px 15px;  /* size of border around code */
+    border-color: #000000;
+    border-radius: 3px;
+    margin-left: 0px;
+    margin-right: 20px;  /* space between side-by-side terminals */
+ }
+
+
+
+
+  @media only screen and (max-width: 10000px) {
+    body {
+      margin-left: 4%;
+      margin-right: 4%;
+    }
+    #nav2 {
+      padding-left: 4%;
+      padding-right: 4%;
+      width: 92%;
+    }
+  }
+
+  @media only screen and (max-width: 800px) {
+    body {
+      margin-left: 2%;
+      margin-right: 2%;
+    }
+    #nav2 {
+      position: absolute;
+      padding: 1px 0px;
+      width: 100%;
+      text-align: center;
+    }
+    #nav2 #logo {
+      display: inline-block;
+      padding-top: 5px;
+      padding-bottom: 10px;
+    }
+    #nav2 #links {
+      width: 385px;
+      margin: 0 auto;
+      padding: 0;
+      display: block;
+    text-align: center;
+    }
+  }
