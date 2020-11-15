@@ -1,0 +1,1472 @@
+type: edu
+files:
+- name: src/taxipark/TaxiPark.kt
+  visible: true
+  text: |-
+    package taxipark
+
+    data class TaxiPark(
+            val allDrivers: Set<Driver>,
+            val allPassengers: Set<Passenger>,
+            val trips: List<Trip>)
+
+    data class Driver(val name: String)
+    data class Passenger(val name: String)
+
+    data class Trip(
+            val driver: Driver,
+            val passengers: Set<Passenger>,
+            // the trip duration in minutes
+            val duration: Int,
+            // the trip distance in km
+            val distance: Double,
+            // the percentage of discount (in 0.0..1.0 if not null)
+            val discount: Double? = null
+    ) {
+        // the total cost of the trip
+        val cost: Double
+            get() = (1 - (discount ?: 0.0)) * (duration + distance)
+    }
+  learner_created: false
+- name: src/taxipark/TaxiParkTask.kt
+  visible: true
+  placeholders:
+  - offset: 136
+    length: 84
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 136
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  - offset: 389
+    length: 104
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 311
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  - offset: 666
+    length: 119
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 490
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  - offset: 1173
+    length: 1
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 646
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  - offset: 1667
+    length: 233
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 929
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  - offset: 2040
+    length: 450
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 1075
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  text: |-
+    package taxipark
+
+    /*
+     * Task #1. Find all the drivers who performed no trips.
+     */
+    fun TaxiPark.findFakeDrivers(): Set<Driver> =
+            TODO()
+
+    /*
+     * Task #2. Find all the clients who completed at least the given number of trips.
+     */
+    fun TaxiPark.findFaithfulPassengers(minTrips: Int): Set<Passenger> =
+            TODO()
+
+    /*
+     * Task #3. Find all the passengers, who were taken by a given driver more than once.
+     */
+    fun TaxiPark.findFrequentPassengers(driver: Driver): Set<Passenger> =
+            TODO()
+
+    /*
+     * Task #4. Find the passengers who had a discount for majority of their trips.
+     */
+    fun TaxiPark.findSmartPassengers(): Set<Passenger> =
+            TODO()
+
+    /*
+     * Task #5. Find the most frequent trip duration among minute periods 0..9, 10..19, 20..29, and so on.
+     * Return any period if many are the most frequent, return `null` if there're no trips.
+     */
+    fun TaxiPark.findTheMostFrequentTripDurationPeriod(): IntRange? {
+        return TODO()
+    }
+
+    /*
+     * Task #6.
+     * Check whether 20% of the drivers contribute 80% of the income.
+     */
+    fun TaxiPark.checkParetoPrinciple(): Boolean {
+        TODO()
+    }
+  learner_created: false
+- name: test/taxipark/TaxiParkTestUtil.kt
+  visible: true
+  text: |
+    package taxipark
+
+    fun driver(i: Int) = Driver("D-$i")
+    fun passenger(i: Int) = Passenger("P-$i")
+
+    fun drivers(indices: List<Int>) = indices.map(::driver).toSet()
+    fun drivers(range: IntRange) = drivers(range.toList())
+    fun drivers(vararg indices: Int) = drivers(indices.toList())
+
+    fun passengers(indices: List<Int>) = indices.map(::passenger).toSet()
+    fun passengers(range: IntRange) = passengers(range.toList())
+    fun passengers(vararg indices: Int) = passengers(indices.toList())
+
+    fun taxiPark(driverIndexes: IntRange, passengerIndexes: IntRange, vararg trips: Trip) =
+            TaxiPark(drivers(driverIndexes), passengers(passengerIndexes), trips.toList())
+
+    fun trip(driverIndex: Int, passengerIndexes: List<Int>, duration: Int = 10, distance: Double = 3.0, discount: Double? = null) =
+            Trip(driver(driverIndex), passengers(passengerIndexes), duration, distance, discount)
+
+    fun trip(driverIndex: Int, passenger: Int, duration: Int = 10, distance: Double = 3.0, discount: Double? = null) =
+            Trip(driver(driverIndex), passengers(passenger), duration, distance, discount)
+
+    fun TaxiPark.display() = buildString {
+        appendln()
+        appendln("Taxi park:")
+        appendln("Drivers: ${allDrivers.map { it.name }}")
+        appendln("Passengers: ${allPassengers.map { it.name }}")
+        appendln("Trips: ${trips.map { it.display() }}")
+    }
+
+    fun Trip.display(): String {
+        val discountText = discount?.let { ", $it" } ?: ""
+        return "(${driver.name}, ${passengers.map { it.name }}, $duration, $distance$discountText)"
+    }
+  learner_created: false
+- name: test/taxipark/TestTask1FakeDrivers.kt
+  visible: true
+  text: |-
+    package taxipark
+
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestTask1FakeDrivers {
+        private fun testFakeDrivers(fakeDriverIndexes: Set<Int>, tp: TaxiPark) {
+            val message = "Wrong result for 'findFakeDrivers()'." + tp.display()
+            val expected = fakeDriverIndexes.map { driver(it) }.toSet()
+            Assert.assertEquals(message, expected, tp.findFakeDrivers())
+        }
+
+        @Test
+        fun test0() = testFakeDrivers(setOf(0, 1, 2), taxiPark(0..2, 0..4))
+
+        @Test
+        fun test1() = testFakeDrivers(setOf(2, 3), taxiPark(1..3, 1..2, trip(1, 1), trip(1, 2)))
+
+        @Test
+        fun test2() = testFakeDrivers(setOf(3), taxiPark(0..3, 0..9,
+                trip(2, listOf(9), duration = 9, distance = 36.0),
+                trip(1, listOf(0), duration = 15, distance = 28.0),
+                trip(2, listOf(1), duration = 37, distance = 30.0),
+                trip(0, listOf(9), duration = 24, distance = 10.0),
+                trip(1, listOf(2), duration = 1, distance = 6.0),
+                trip(0, listOf(0, 9), duration = 9, distance = 7.0),
+                trip(2, listOf(3, 2, 8), duration = 18, distance = 39.0, discount = 0.1),
+                trip(1, listOf(9, 4), duration = 19, distance = 1.0, discount = 0.2),
+                trip(1, listOf(3), duration = 16, distance = 23.0),
+                trip(2, listOf(7), duration = 10, distance = 31.0, discount = 0.2)))
+
+        @Test
+        fun test3() = testFakeDrivers(setOf(0, 2, 4), taxiPark(0..4, 0..9,
+                trip(3, listOf(2), duration = 24, distance = 7.0),
+                trip(3, listOf(8, 5, 9), duration = 30, distance = 23.0, discount = 0.4),
+                trip(3, listOf(4, 9, 3, 7), duration = 24, distance = 8.0),
+                trip(1, listOf(2), duration = 32, distance = 27.0, discount = 0.2),
+                trip(3, listOf(0, 5, 7, 6), duration = 38, distance = 3.0, discount = 0.2),
+                trip(3, listOf(8, 0), duration = 6, distance = 39.0),
+                trip(1, listOf(3, 1), duration = 18, distance = 39.0, discount = 0.2),
+                trip(3, listOf(6, 5), duration = 19, distance = 21.0),
+                trip(1, listOf(8, 0), duration = 5, distance = 5.0),
+                trip(3, listOf(3, 7, 9), duration = 24, distance = 20.0)))
+
+        @Test
+        fun test4() = testFakeDrivers(setOf(0, 1, 4, 5, 8), taxiPark(0..9, 0..19,
+                trip(6, listOf(0), duration = 36, distance = 1.0, discount = 0.3),
+                trip(7, listOf(3, 5), duration = 34, distance = 11.0),
+                trip(9, listOf(15, 1), duration = 13, distance = 12.0),
+                trip(3, listOf(7), duration = 15, distance = 30.0, discount = 0.2),
+                trip(9, listOf(8, 6, 7, 11), duration = 36, distance = 16.0),
+                trip(3, listOf(11, 8, 15, 6), duration = 37, distance = 32.0, discount = 0.4),
+                trip(2, listOf(1, 6), duration = 12, distance = 15.0, discount = 0.1),
+                trip(2, listOf(3, 2, 19), duration = 2, distance = 11.0, discount = 0.2),
+                trip(3, listOf(7, 5), duration = 26, distance = 10.0, discount = 0.3),
+                trip(3, listOf(6, 4), duration = 10, distance = 35.0),
+                trip(7, listOf(7, 14), duration = 27, distance = 2.0, discount = 0.3),
+                trip(3, listOf(3, 11), duration = 1, distance = 33.0),
+                trip(7, listOf(3), duration = 26, distance = 4.0, discount = 0.4),
+                trip(2, listOf(18, 7), duration = 15, distance = 6.0, discount = 0.4),
+                trip(2, listOf(0, 1, 2), duration = 30, distance = 17.0),
+                trip(2, listOf(0, 11), duration = 32, distance = 5.0, discount = 0.4),
+                trip(9, listOf(0, 15), duration = 27, distance = 3.0),
+                trip(9, listOf(11, 15), duration = 11, distance = 15.0, discount = 0.2),
+                trip(2, listOf(12, 14, 8), duration = 31, distance = 34.0),
+                trip(7, listOf(15, 11), duration = 1, distance = 3.0)))
+
+        @Test
+        fun test5() = testFakeDrivers(setOf(2, 7, 8, 11, 14, 15, 16, 18), taxiPark(0..19, 0..19,
+                trip(3, listOf(14, 15, 3), duration = 10, distance = 24.0, discount = 0.4),
+                trip(17, listOf(11), duration = 39, distance = 31.0, discount = 0.2),
+                trip(1, listOf(15), duration = 3, distance = 12.0, discount = 0.4),
+                trip(5, listOf(19, 0, 15, 8), duration = 15, distance = 13.0, discount = 0.2),
+                trip(10, listOf(16, 1, 9), duration = 23, distance = 15.0, discount = 0.2),
+                trip(1, listOf(11), duration = 6, distance = 13.0),
+                trip(1, listOf(9, 1), duration = 16, distance = 26.0, discount = 0.1),
+                trip(10, listOf(14), duration = 28, distance = 17.0),
+                trip(5, listOf(8), duration = 28, distance = 8.0),
+                trip(13, listOf(0, 9), duration = 31, distance = 28.0, discount = 0.3),
+                trip(12, listOf(4), duration = 28, distance = 34.0),
+                trip(9, listOf(9, 13, 4, 0), duration = 38, distance = 29.0),
+                trip(3, listOf(15), duration = 4, distance = 31.0, discount = 0.3),
+                trip(13, listOf(18, 1, 7), duration = 38, distance = 16.0, discount = 0.4),
+                trip(6, listOf(11, 15, 3), duration = 15, distance = 11.0, discount = 0.1),
+                trip(5, listOf(13), duration = 3, distance = 17.0),
+                trip(4, listOf(4), duration = 26, distance = 24.0, discount = 0.3),
+                trip(6, listOf(2, 18), duration = 35, distance = 13.0, discount = 0.1),
+                trip(19, listOf(5), duration = 3, distance = 24.0, discount = 0.2),
+                trip(0, listOf(7, 19, 18, 16), duration = 20, distance = 14.0, discount = 0.4)))
+
+        @Test
+        fun test6() = testFakeDrivers(setOf(5, 7), taxiPark(0..9, 0..19,
+                trip(8, listOf(1, 18), duration = 33, distance = 28.0, discount = 0.2),
+                trip(8, listOf(0), duration = 13, distance = 35.0, discount = 0.4),
+                trip(9, listOf(9), duration = 8, distance = 29.0, discount = 0.4),
+                trip(9, listOf(15, 3), duration = 34, distance = 34.0),
+                trip(6, listOf(4, 7), duration = 35, distance = 13.0, discount = 0.4),
+                trip(1, listOf(15, 6, 11), duration = 36, distance = 29.0, discount = 0.4),
+                trip(6, listOf(9, 12, 6), duration = 21, distance = 36.0),
+                trip(6, listOf(13, 8), duration = 27, distance = 6.0, discount = 0.4),
+                trip(8, listOf(4, 0), duration = 31, distance = 38.0, discount = 0.2),
+                trip(4, listOf(15, 19, 7), duration = 21, distance = 26.0, discount = 0.2),
+                trip(4, listOf(12, 7, 11, 15), duration = 4, distance = 26.0, discount = 0.4),
+                trip(3, listOf(5, 4), duration = 27, distance = 27.0, discount = 0.2),
+                trip(6, listOf(13, 17, 0, 14), duration = 33, distance = 35.0, discount = 0.4),
+                trip(9, listOf(0, 14, 18), duration = 24, distance = 10.0, discount = 0.2),
+                trip(4, listOf(7, 8, 6, 2), duration = 29, distance = 11.0, discount = 0.3),
+                trip(0, listOf(9), duration = 36, distance = 20.0),
+                trip(1, listOf(17), duration = 36, distance = 4.0),
+                trip(8, listOf(19, 10), duration = 24, distance = 27.0),
+                trip(8, listOf(11, 18), duration = 23, distance = 33.0, discount = 0.3),
+                trip(4, listOf(10), duration = 33, distance = 8.0),
+                trip(0, listOf(13), duration = 32, distance = 11.0),
+                trip(0, listOf(12), duration = 39, distance = 37.0, discount = 0.2),
+                trip(6, listOf(5, 19, 10), duration = 19, distance = 20.0, discount = 0.4),
+                trip(2, listOf(19, 10), duration = 17, distance = 18.0, discount = 0.2),
+                trip(4, listOf(0), duration = 5, distance = 14.0, discount = 0.3),
+                trip(3, listOf(14), duration = 1, distance = 39.0),
+                trip(8, listOf(9), duration = 32, distance = 17.0, discount = 0.2),
+                trip(1, listOf(0), duration = 38, distance = 35.0, discount = 0.3),
+                trip(3, listOf(19), duration = 30, distance = 5.0),
+                trip(1, listOf(18), duration = 4, distance = 12.0),
+                trip(2, listOf(0), duration = 21, distance = 23.0, discount = 0.1),
+                trip(6, listOf(17), duration = 4, distance = 27.0, discount = 0.2),
+                trip(0, listOf(13, 18), duration = 19, distance = 31.0, discount = 0.3),
+                trip(4, listOf(5, 14), duration = 17, distance = 4.0, discount = 0.2),
+                trip(3, listOf(16), duration = 35, distance = 1.0),
+                trip(2, listOf(5, 8, 12), duration = 34, distance = 20.0, discount = 0.3),
+                trip(9, listOf(1, 11), duration = 37, distance = 9.0, discount = 0.2),
+                trip(1, listOf(19, 15), duration = 30, distance = 5.0, discount = 0.4),
+                trip(9, listOf(4), duration = 3, distance = 0.0, discount = 0.3),
+                trip(2, listOf(11, 10, 14, 1), duration = 27, distance = 29.0, discount = 0.4)))
+    }
+  learner_created: false
+- name: test/taxipark/TestTask2FaithfulPassengers.kt
+  visible: true
+  text: |-
+    package taxipark
+
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestTask2FaithfulPassengers {
+        private fun testFaithfulPassengers(minTrips: Int, passengerIndexes: Set<Int>, tp: TaxiPark) {
+            val message = "Wrong result for 'findFaithfulPassengers()'. MinTrips: $minTrips." + tp.display()
+            val expected = passengerIndexes.map { passenger(it) }.toSet()
+            Assert.assertEquals(message, expected, tp.findFaithfulPassengers(minTrips))
+        }
+
+        @Test
+        fun test0() = testFaithfulPassengers(1, setOf(), taxiPark(0..2, 0..4))
+
+
+        @Test
+        fun test1() {
+            testFaithfulPassengers(2, setOf(1, 4, 5),
+                    taxiPark(1..3, 1..5, trip(1, 1), trip(2, 1), trip(1, 4), trip(3, 4), trip(1, 5), trip(2, 5), trip(2, 2)))
+        }
+
+        @Test
+        fun test2() = testFaithfulPassengers(3, setOf(0, 1, 2, 4, 5), taxiPark(0..5, 0..5,
+                trip(3, listOf(2), duration = 5, distance = 4.0, discount = 0.3),
+                trip(3, listOf(5, 2, 0), duration = 13, distance = 1.0, discount = 0.2),
+                trip(2, listOf(1, 2, 0), duration = 33, distance = 23.0),
+                trip(2, listOf(5, 4), duration = 16, distance = 5.0),
+                trip(0, listOf(2, 1), duration = 37, distance = 20.0),
+                trip(1, listOf(2, 4), duration = 18, distance = 22.0),
+                trip(3, listOf(5), duration = 20, distance = 27.0, discount = 0.1),
+                trip(1, listOf(0, 4), duration = 18, distance = 13.0, discount = 0.1),
+                trip(4, listOf(1, 3), duration = 19, distance = 31.0, discount = 0.2),
+                trip(3, listOf(4), duration = 29, distance = 11.0, discount = 0.1)))
+
+        @Test
+        fun test3() = testFaithfulPassengers(4, setOf(2, 4), taxiPark(0..5, 0..5,
+                trip(3, listOf(2), duration = 5, distance = 4.0, discount = 0.3),
+                trip(3, listOf(5, 2, 0), duration = 13, distance = 1.0, discount = 0.2),
+                trip(2, listOf(1, 2, 0), duration = 33, distance = 23.0),
+                trip(2, listOf(5, 4), duration = 16, distance = 5.0),
+                trip(0, listOf(2, 1), duration = 37, distance = 20.0),
+                trip(1, listOf(2, 4), duration = 18, distance = 22.0),
+                trip(3, listOf(5), duration = 20, distance = 27.0, discount = 0.1),
+                trip(1, listOf(0, 4), duration = 18, distance = 13.0, discount = 0.1),
+                trip(4, listOf(1, 3), duration = 19, distance = 31.0, discount = 0.2),
+                trip(3, listOf(4), duration = 29, distance = 11.0, discount = 0.1)))
+
+        @Test
+        fun test4() = testFaithfulPassengers(8, setOf(2, 3, 6, 7), taxiPark(0..3, 0..7,
+                trip(1, listOf(2, 6), duration = 23, distance = 23.0, discount = 0.4),
+                trip(1, listOf(3, 2, 7), duration = 29, distance = 27.0, discount = 0.1),
+                trip(0, listOf(7), duration = 13, distance = 28.0, discount = 0.1),
+                trip(1, listOf(5), duration = 5, distance = 0.0),
+                trip(0, listOf(3, 2), duration = 12, distance = 19.0),
+                trip(1, listOf(4, 3, 6, 7), duration = 18, distance = 9.0, discount = 0.3),
+                trip(0, listOf(1, 3), duration = 3, distance = 32.0),
+                trip(0, listOf(6, 5, 0), duration = 9, distance = 7.0),
+                trip(2, listOf(6, 2, 7), duration = 19, distance = 18.0),
+                trip(0, listOf(7), duration = 32, distance = 31.0, discount = 0.1),
+                trip(3, listOf(4, 2, 5, 6), duration = 22, distance = 28.0),
+                trip(3, listOf(3, 7, 2), duration = 36, distance = 20.0),
+                trip(1, listOf(1, 3), duration = 16, distance = 5.0, discount = 0.3),
+                trip(0, listOf(6), duration = 18, distance = 27.0),
+                trip(3, listOf(3, 7), duration = 0, distance = 10.0),
+                trip(0, listOf(2, 1, 6), duration = 9, distance = 8.0),
+                trip(0, listOf(6, 4), duration = 35, distance = 31.0, discount = 0.3),
+                trip(1, listOf(7), duration = 23, distance = 7.0),
+                trip(1, listOf(0, 2, 3, 5), duration = 33, distance = 14.0, discount = 0.2),
+                trip(0, listOf(5, 3), duration = 8, distance = 1.0))
+        )
+
+        @Test
+        fun test5() = testFaithfulPassengers(0, setOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), taxiPark(0..3, 0..11,
+                trip(3, listOf(9), duration = 4, distance = 26.0, discount = 0.3),
+                trip(0, listOf(7), duration = 16, distance = 34.0, discount = 0.2),
+                trip(2, listOf(9), duration = 19, distance = 16.0),
+                trip(1, listOf(4, 6, 3), duration = 0, distance = 3.0),
+                trip(3, listOf(6, 11), duration = 33, distance = 10.0),
+                trip(3, listOf(11, 9), duration = 20, distance = 22.0),
+                trip(1, listOf(3, 4), duration = 18, distance = 19.0),
+                trip(3, listOf(4, 7), duration = 0, distance = 31.0, discount = 0.3),
+                trip(0, listOf(8, 7), duration = 7, distance = 14.0),
+                trip(0, listOf(11, 7, 5, 8), duration = 4, distance = 1.0, discount = 0.4),
+                trip(3, listOf(4, 8, 1), duration = 35, distance = 2.0),
+                trip(3, listOf(1), duration = 35, distance = 30.0),
+                trip(2, listOf(6, 1), duration = 23, distance = 33.0),
+                trip(3, listOf(7, 6), duration = 38, distance = 9.0),
+                trip(1, listOf(3, 4, 5), duration = 2, distance = 34.0, discount = 0.2),
+                trip(1, listOf(4, 8, 7), duration = 5, distance = 31.0, discount = 0.1),
+                trip(0, listOf(11, 4, 6), duration = 15, distance = 2.0),
+                trip(3, listOf(9, 8, 6), duration = 24, distance = 17.0),
+                trip(3, listOf(0), duration = 37, distance = 3.0, discount = 0.1),
+                trip(1, listOf(5, 7), duration = 0, distance = 15.0, discount = 0.4))
+        )
+
+        @Test
+        fun test6() = testFaithfulPassengers(1, setOf(0, 1, 3, 4, 5, 6, 7, 8, 9, 11), taxiPark(0..3, 0..11,
+                trip(3, listOf(9), duration = 4, distance = 26.0, discount = 0.3),
+                trip(0, listOf(7), duration = 16, distance = 34.0, discount = 0.2),
+                trip(2, listOf(9), duration = 19, distance = 16.0),
+                trip(1, listOf(4, 6, 3), duration = 0, distance = 3.0),
+                trip(3, listOf(6, 11), duration = 33, distance = 10.0),
+                trip(3, listOf(11, 9), duration = 20, distance = 22.0),
+                trip(1, listOf(3, 4), duration = 18, distance = 19.0),
+                trip(3, listOf(4, 7), duration = 0, distance = 31.0, discount = 0.3),
+                trip(0, listOf(8, 7), duration = 7, distance = 14.0),
+                trip(0, listOf(11, 7, 5, 8), duration = 4, distance = 1.0, discount = 0.4),
+                trip(3, listOf(4, 8, 1), duration = 35, distance = 2.0),
+                trip(3, listOf(1), duration = 35, distance = 30.0),
+                trip(2, listOf(6, 1), duration = 23, distance = 33.0),
+                trip(3, listOf(7, 6), duration = 38, distance = 9.0),
+                trip(1, listOf(3, 4, 5), duration = 2, distance = 34.0, discount = 0.2),
+                trip(1, listOf(4, 8, 7), duration = 5, distance = 31.0, discount = 0.1),
+                trip(0, listOf(11, 4, 6), duration = 15, distance = 2.0),
+                trip(3, listOf(9, 8, 6), duration = 24, distance = 17.0),
+                trip(3, listOf(0), duration = 37, distance = 3.0, discount = 0.1),
+                trip(1, listOf(5, 7), duration = 0, distance = 15.0, discount = 0.4))
+        )
+
+        @Test
+        fun test7() = testFaithfulPassengers(3, setOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15), taxiPark(0..7, 0..15,
+                trip(6, listOf(10, 15), duration = 18, distance = 2.0, discount = 0.2),
+                trip(1, listOf(13), duration = 26, distance = 17.0),
+                trip(5, listOf(5, 9), duration = 5, distance = 17.0, discount = 0.1),
+                trip(2, listOf(10), duration = 6, distance = 13.0, discount = 0.4),
+                trip(7, listOf(0, 6, 5), duration = 24, distance = 21.0, discount = 0.2),
+                trip(0, listOf(3, 14, 10, 8), duration = 11, distance = 0.0, discount = 0.2),
+                trip(1, listOf(3, 12), duration = 19, distance = 35.0, discount = 0.1),
+                trip(5, listOf(4), duration = 0, distance = 33.0),
+                trip(1, listOf(14), duration = 7, distance = 25.0, discount = 0.4),
+                trip(4, listOf(2, 15), duration = 15, distance = 2.0),
+                trip(0, listOf(11, 0), duration = 32, distance = 23.0),
+                trip(1, listOf(0, 8), duration = 19, distance = 15.0, discount = 0.4),
+                trip(4, listOf(11, 4), duration = 14, distance = 19.0, discount = 0.3),
+                trip(4, listOf(5), duration = 16, distance = 38.0, discount = 0.3),
+                trip(5, listOf(7), duration = 3, distance = 31.0, discount = 0.4),
+                trip(4, listOf(9, 12), duration = 1, distance = 16.0),
+                trip(4, listOf(0, 4, 15, 6), duration = 1, distance = 38.0, discount = 0.3),
+                trip(7, listOf(11, 6), duration = 38, distance = 14.0),
+                trip(2, listOf(1), duration = 11, distance = 19.0, discount = 0.4),
+                trip(1, listOf(10, 11, 1), duration = 30, distance = 33.0),
+                trip(7, listOf(0), duration = 2, distance = 23.0, discount = 0.2),
+                trip(2, listOf(11, 12), duration = 14, distance = 4.0, discount = 0.2),
+                trip(2, listOf(1, 12), duration = 30, distance = 39.0),
+                trip(4, listOf(11), duration = 27, distance = 30.0),
+                trip(6, listOf(7, 3, 5), duration = 21, distance = 18.0),
+                trip(0, listOf(5, 11, 6, 13), duration = 3, distance = 26.0),
+                trip(3, listOf(7, 14), duration = 39, distance = 13.0, discount = 0.4),
+                trip(5, listOf(0, 2), duration = 25, distance = 9.0),
+                trip(4, listOf(1, 2), duration = 36, distance = 26.0),
+                trip(7, listOf(0, 5), duration = 36, distance = 9.0, discount = 0.2),
+                trip(2, listOf(7, 14), duration = 8, distance = 26.0),
+                trip(5, listOf(6), duration = 25, distance = 29.0, discount = 0.4),
+                trip(1, listOf(14), duration = 39, distance = 31.0, discount = 0.1),
+                trip(2, listOf(5, 13), duration = 7, distance = 37.0, discount = 0.1),
+                trip(4, listOf(4), duration = 16, distance = 31.0, discount = 0.2),
+                trip(1, listOf(13), duration = 33, distance = 31.0),
+                trip(5, listOf(11, 1), duration = 23, distance = 32.0, discount = 0.2),
+                trip(5, listOf(13, 2), duration = 25, distance = 8.0),
+                trip(4, listOf(15), duration = 18, distance = 15.0),
+                trip(4, listOf(13, 8), duration = 0, distance = 27.0))
+        )
+    }
+  learner_created: false
+- name: test/taxipark/TestTask3FrequentPassengers.kt
+  visible: true
+  text: |-
+    package taxipark
+
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestTask3FrequentPassengers {
+        private fun testFrequentPassengers(driverIndex: Int, passengerIndexes: Set<Int>, tp: TaxiPark) {
+            val message = "Wrong result for 'findFrequentPassengers()'. Driver: ${driver(driverIndex).name}." + tp.display()
+            val expected = passengerIndexes.map { passenger(it) }.toSet()
+            Assert.assertEquals(message, expected, tp.findFrequentPassengers(driver(driverIndex)))
+        }
+
+        @Test
+        fun test0() {
+            testFrequentPassengers(1, setOf(1, 3),
+                    taxiPark(1..2, 1..4, trip(1, 1), trip(1, 1), trip(1, listOf(1, 3)), trip(1, 3), trip(1, 2), trip(2, 2)))
+        }
+
+
+        @Test
+        fun test01() = testFrequentPassengers(2, setOf(5, 7), taxiPark(0..2, 0..7,
+                trip(1, listOf(3, 6, 4, 1), duration = 26, distance = 22.0),
+                trip(2, listOf(7), duration = 18, distance = 27.0),
+                trip(1, listOf(1), duration = 11, distance = 37.0),
+                trip(0, listOf(0, 7), duration = 1, distance = 6.0),
+                trip(2, listOf(6, 7, 5), duration = 1, distance = 37.0, discount = 0.4),
+                trip(2, listOf(5, 0), duration = 39, distance = 39.0, discount = 0.2),
+                trip(0, listOf(1), duration = 6, distance = 15.0, discount = 0.3),
+                trip(2, listOf(7), duration = 36, distance = 26.0, discount = 0.1),
+                trip(2, listOf(5), duration = 5, distance = 24.0),
+                trip(1, listOf(7, 5, 0, 1), duration = 18, distance = 22.0, discount = 0.3)))
+
+        @Test
+        fun test02() = testFrequentPassengers(1, setOf(1), taxiPark(0..2, 0..7,
+                trip(1, listOf(3, 6, 4, 1), duration = 26, distance = 22.0),
+                trip(2, listOf(7), duration = 18, distance = 27.0),
+                trip(1, listOf(1), duration = 11, distance = 37.0),
+                trip(0, listOf(0, 7), duration = 1, distance = 6.0),
+                trip(2, listOf(6, 7, 5), duration = 1, distance = 37.0, discount = 0.4),
+                trip(2, listOf(5, 0), duration = 39, distance = 39.0, discount = 0.2),
+                trip(0, listOf(1), duration = 6, distance = 15.0, discount = 0.3),
+                trip(2, listOf(7), duration = 36, distance = 26.0, discount = 0.1),
+                trip(2, listOf(5), duration = 5, distance = 24.0),
+                trip(1, listOf(7, 5, 0, 1), duration = 18, distance = 22.0, discount = 0.3)))
+
+        @Test
+        fun test03() = testFrequentPassengers(1, setOf(0, 2, 3, 7), taxiPark(0..2, 0..7,
+                trip(2, listOf(6, 3, 4), duration = 35, distance = 14.0, discount = 0.4),
+                trip(0, listOf(2, 1, 5), duration = 13, distance = 2.0, discount = 0.4),
+                trip(0, listOf(1, 0), duration = 14, distance = 21.0),
+                trip(1, listOf(7), duration = 18, distance = 19.0, discount = 0.4),
+                trip(2, listOf(3), duration = 18, distance = 24.0, discount = 0.2),
+                trip(2, listOf(6, 3), duration = 8, distance = 32.0),
+                trip(2, listOf(3, 6), duration = 36, distance = 0.0, discount = 0.4),
+                trip(1, listOf(3, 0, 2, 7), duration = 30, distance = 23.0),
+                trip(1, listOf(0, 4, 3, 1), duration = 5, distance = 39.0),
+                trip(1, listOf(2, 7), duration = 12, distance = 38.0)))
+
+        @Test
+        fun test04() = testFrequentPassengers(2, setOf(2, 3, 4, 5), taxiPark(0..2, 0..7,
+                trip(2, listOf(2), duration = 25, distance = 7.0, discount = 0.4),
+                trip(2, listOf(3), duration = 34, distance = 38.0, discount = 0.1),
+                trip(1, listOf(7, 3, 6), duration = 27, distance = 26.0),
+                trip(2, listOf(3, 5), duration = 25, distance = 8.0),
+                trip(2, listOf(2, 4, 3), duration = 1, distance = 20.0, discount = 0.4),
+                trip(0, listOf(0), duration = 3, distance = 5.0),
+                trip(2, listOf(5, 4), duration = 5, distance = 5.0, discount = 0.3),
+                trip(2, listOf(4, 2, 1), duration = 0, distance = 20.0),
+                trip(1, listOf(1, 2, 6), duration = 10, distance = 6.0),
+                trip(1, listOf(5), duration = 3, distance = 1.0)))
+
+        @Test
+        fun test05() = testFrequentPassengers(2, setOf(), taxiPark(0..5, 0..15,
+                trip(3, listOf(2, 5, 15), duration = 22, distance = 4.0, discount = 0.4),
+                trip(1, listOf(1, 8), duration = 28, distance = 17.0),
+                trip(5, listOf(15), duration = 32, distance = 2.0, discount = 0.3),
+                trip(4, listOf(12, 7), duration = 30, distance = 24.0),
+                trip(3, listOf(11, 15), duration = 13, distance = 24.0),
+                trip(3, listOf(1, 11, 13), duration = 28, distance = 25.0),
+                trip(4, listOf(13, 5, 14, 2), duration = 19, distance = 36.0, discount = 0.4),
+                trip(0, listOf(4, 13), duration = 2, distance = 14.0),
+                trip(3, listOf(6), duration = 28, distance = 36.0),
+                trip(2, listOf(12, 4, 8, 10), duration = 20, distance = 8.0),
+                trip(5, listOf(11, 15, 14, 13), duration = 31, distance = 11.0),
+                trip(0, listOf(8, 3, 14), duration = 39, distance = 23.0, discount = 0.3),
+                trip(0, listOf(3), duration = 0, distance = 29.0),
+                trip(1, listOf(7, 14), duration = 18, distance = 21.0, discount = 0.2),
+                trip(1, listOf(6), duration = 36, distance = 19.0),
+                trip(1, listOf(3), duration = 6, distance = 7.0, discount = 0.3),
+                trip(0, listOf(9, 6), duration = 23, distance = 8.0),
+                trip(3, listOf(0, 14, 8), duration = 16, distance = 8.0, discount = 0.1),
+                trip(2, listOf(5), duration = 34, distance = 1.0, discount = 0.2),
+                trip(1, listOf(15, 7), duration = 6, distance = 19.0)))
+
+        @Test
+        fun test06() = testFrequentPassengers(3, setOf(3, 13, 15), taxiPark(0..5, 0..15,
+                trip(4, listOf(0, 5), duration = 28, distance = 38.0),
+                trip(5, listOf(1, 9), duration = 2, distance = 39.0, discount = 0.4),
+                trip(1, listOf(8, 7, 0), duration = 1, distance = 34.0, discount = 0.4),
+                trip(0, listOf(11), duration = 2, distance = 11.0, discount = 0.4),
+                trip(3, listOf(1, 7), duration = 15, distance = 27.0, discount = 0.4),
+                trip(4, listOf(0, 8, 3), duration = 6, distance = 18.0, discount = 0.2),
+                trip(5, listOf(14, 3, 1), duration = 24, distance = 2.0, discount = 0.3),
+                trip(2, listOf(8), duration = 15, distance = 4.0, discount = 0.1),
+                trip(3, listOf(12, 15, 8), duration = 23, distance = 5.0, discount = 0.2),
+                trip(5, listOf(15, 10), duration = 12, distance = 15.0),
+                trip(2, listOf(3), duration = 11, distance = 23.0, discount = 0.1),
+                trip(3, listOf(13, 15), duration = 39, distance = 39.0),
+                trip(0, listOf(12), duration = 21, distance = 36.0),
+                trip(3, listOf(3, 6), duration = 2, distance = 12.0),
+                trip(4, listOf(3, 13), duration = 36, distance = 15.0),
+                trip(3, listOf(13, 4), duration = 34, distance = 11.0),
+                trip(3, listOf(3, 15), duration = 33, distance = 17.0, discount = 0.2),
+                trip(4, listOf(15), duration = 10, distance = 10.0, discount = 0.1),
+                trip(1, listOf(8, 5), duration = 14, distance = 33.0),
+                trip(0, listOf(15, 10), duration = 28, distance = 19.0)))
+
+        @Test
+        fun test07() = testFrequentPassengers(5, setOf(1), taxiPark(0..5, 0..15,
+                trip(4, listOf(0, 5), duration = 28, distance = 38.0),
+                trip(5, listOf(1, 9), duration = 2, distance = 39.0, discount = 0.4),
+                trip(1, listOf(8, 7, 0), duration = 1, distance = 34.0, discount = 0.4),
+                trip(0, listOf(11), duration = 2, distance = 11.0, discount = 0.4),
+                trip(3, listOf(1, 7), duration = 15, distance = 27.0, discount = 0.4),
+                trip(4, listOf(0, 8, 3), duration = 6, distance = 18.0, discount = 0.2),
+                trip(5, listOf(14, 3, 1), duration = 24, distance = 2.0, discount = 0.3),
+                trip(2, listOf(8), duration = 15, distance = 4.0, discount = 0.1),
+                trip(3, listOf(12, 15, 8), duration = 23, distance = 5.0, discount = 0.2),
+                trip(5, listOf(15, 10), duration = 12, distance = 15.0),
+                trip(2, listOf(3), duration = 11, distance = 23.0, discount = 0.1),
+                trip(3, listOf(13, 15), duration = 39, distance = 39.0),
+                trip(0, listOf(12), duration = 21, distance = 36.0),
+                trip(3, listOf(3, 6), duration = 2, distance = 12.0),
+                trip(4, listOf(3, 13), duration = 36, distance = 15.0),
+                trip(3, listOf(13, 4), duration = 34, distance = 11.0),
+                trip(3, listOf(3, 15), duration = 33, distance = 17.0, discount = 0.2),
+                trip(4, listOf(15), duration = 10, distance = 10.0, discount = 0.1),
+                trip(1, listOf(8, 5), duration = 14, distance = 33.0),
+                trip(0, listOf(15, 10), duration = 28, distance = 19.0)))
+
+        @Test
+        fun test08() = testFrequentPassengers(3, setOf(), taxiPark(0..5, 0..15))
+
+        @Test
+        fun test09() = testFrequentPassengers(1, setOf(0, 1, 2, 3, 4, 5), taxiPark(0..1, 0..5,
+                trip(1, listOf(4), duration = 33, distance = 14.0, discount = 0.2),
+                trip(1, listOf(0), duration = 0, distance = 22.0),
+                trip(0, listOf(5, 0), duration = 21, distance = 11.0),
+                trip(0, listOf(0, 4), duration = 13, distance = 8.0, discount = 0.3),
+                trip(1, listOf(1), duration = 9, distance = 7.0),
+                trip(1, listOf(4, 3), duration = 10, distance = 29.0, discount = 0.2),
+                trip(1, listOf(5, 3), duration = 25, distance = 0.0),
+                trip(0, listOf(0), duration = 37, distance = 13.0, discount = 0.3),
+                trip(1, listOf(5, 2), duration = 24, distance = 21.0),
+                trip(1, listOf(4), duration = 21, distance = 33.0, discount = 0.2),
+                trip(1, listOf(0, 1, 4), duration = 32, distance = 21.0),
+                trip(1, listOf(5, 4), duration = 0, distance = 30.0),
+                trip(1, listOf(5, 1), duration = 0, distance = 14.0, discount = 0.3),
+                trip(1, listOf(0, 4), duration = 25, distance = 19.0),
+                trip(1, listOf(2, 5), duration = 36, distance = 26.0, discount = 0.4),
+                trip(1, listOf(0, 2), duration = 16, distance = 38.0),
+                trip(1, listOf(2, 4, 1), duration = 4, distance = 26.0),
+                trip(0, listOf(1, 5), duration = 28, distance = 10.0),
+                trip(1, listOf(4, 3, 0), duration = 16, distance = 26.0, discount = 0.1),
+                trip(0, listOf(5), duration = 9, distance = 37.0)))
+
+        @Test
+        fun test10() = testFrequentPassengers(1, setOf(0, 1, 2, 4, 5), taxiPark(0..1, 0..5,
+                trip(0, listOf(4), duration = 9, distance = 14.0),
+                trip(0, listOf(3, 5, 0), duration = 21, distance = 15.0),
+                trip(0, listOf(5, 3), duration = 9, distance = 33.0),
+                trip(1, listOf(2), duration = 29, distance = 6.0, discount = 0.2),
+                trip(0, listOf(4), duration = 4, distance = 39.0, discount = 0.4),
+                trip(1, listOf(5), duration = 8, distance = 31.0, discount = 0.1),
+                trip(1, listOf(0, 5, 1), duration = 6, distance = 1.0, discount = 0.3),
+                trip(0, listOf(5, 4), duration = 32, distance = 36.0),
+                trip(1, listOf(4), duration = 27, distance = 4.0, discount = 0.3),
+                trip(1, listOf(0, 2), duration = 2, distance = 9.0),
+                trip(0, listOf(1, 3), duration = 2, distance = 2.0, discount = 0.3),
+                trip(0, listOf(2, 3), duration = 3, distance = 6.0, discount = 0.1),
+                trip(1, listOf(4, 3), duration = 37, distance = 29.0, discount = 0.3),
+                trip(1, listOf(4, 2), duration = 38, distance = 32.0),
+                trip(1, listOf(0, 4, 5), duration = 29, distance = 5.0, discount = 0.3),
+                trip(0, listOf(5, 4), duration = 8, distance = 14.0),
+                trip(0, listOf(2), duration = 36, distance = 37.0, discount = 0.1),
+                trip(0, listOf(0), duration = 26, distance = 11.0, discount = 0.4),
+                trip(1, listOf(1, 0), duration = 23, distance = 6.0, discount = 0.3),
+                trip(1, listOf(4, 0), duration = 30, distance = 20.0, discount = 0.4)))
+
+    }
+  learner_created: false
+- name: test/taxipark/TestTask4SmartPassengers.kt
+  visible: true
+  text: |-
+    package taxipark
+
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestTask4SmartPassengers {
+        private fun testSmartPassengers(passengerIndexes: Set<Int>, tp: TaxiPark) {
+            val message = "Wrong result for 'findSmartPassengers()'." + tp.display()
+            val expected = passengerIndexes.map { passenger(it) }.toSet()
+            Assert.assertEquals(message, expected, tp.findSmartPassengers())
+        }
+
+        @Test
+        fun test00() = testSmartPassengers(setOf(), taxiPark(0..1, 0..10))
+
+        @Test
+        fun test01() {
+            testSmartPassengers(setOf(1), taxiPark(1..2, 1..2, trip(1, 1, discount = 0.1), trip(2, 2)))
+        }
+
+
+        @Test
+        fun test02() = testSmartPassengers(setOf(), taxiPark(0..5, 0..9,
+                trip(5, listOf(2), duration = 33, distance = 18.0),
+                trip(3, listOf(5, 9), duration = 29, distance = 16.0, discount = 0.3),
+                trip(2, listOf(5, 3, 8), duration = 0, distance = 3.0),
+                trip(1, listOf(4, 8), duration = 32, distance = 6.0),
+                trip(0, listOf(1), duration = 37, distance = 28.0),
+                trip(2, listOf(0, 8), duration = 0, distance = 7.0),
+                trip(2, listOf(9, 4), duration = 25, distance = 35.0),
+                trip(0, listOf(3, 7), duration = 30, distance = 35.0),
+                trip(2, listOf(2, 3), duration = 17, distance = 27.0, discount = 0.4),
+                trip(1, listOf(9, 5, 4), duration = 5, distance = 7.0))
+        )
+
+        @Test
+        fun test03() = testSmartPassengers(setOf(2), taxiPark(0..2, 0..2,
+                trip(2, listOf(2, 1), duration = 14, distance = 10.0, discount = 0.4),
+                trip(1, listOf(1, 2, 0), duration = 20, distance = 26.0),
+                trip(0, listOf(2, 0), duration = 15, distance = 14.0, discount = 0.4),
+                trip(0, listOf(2, 1), duration = 4, distance = 17.0, discount = 0.2),
+                trip(1, listOf(0, 1, 2), duration = 35, distance = 23.0),
+                trip(2, listOf(1), duration = 28, distance = 5.0),
+                trip(0, listOf(0), duration = 30, distance = 25.0, discount = 0.3),
+                trip(0, listOf(2, 0), duration = 24, distance = 13.0),
+                trip(0, listOf(0, 2), duration = 5, distance = 5.0, discount = 0.2),
+                trip(0, listOf(2), duration = 39, distance = 29.0, discount = 0.1),
+                trip(1, listOf(0, 2), duration = 25, distance = 9.0),
+                trip(2, listOf(2, 0), duration = 36, distance = 23.0, discount = 0.2)))
+
+        @Test
+        fun test04() = testSmartPassengers(setOf(0, 1), taxiPark(0..2, 0..2,
+                trip(2, listOf(0), duration = 8, distance = 2.0),
+                trip(1, listOf(2), duration = 36, distance = 8.0),
+                trip(1, listOf(1), duration = 29, distance = 8.0, discount = 0.1),
+                trip(2, listOf(0), duration = 22, distance = 10.0, discount = 0.4),
+                trip(1, listOf(1), duration = 16, distance = 27.0),
+                trip(1, listOf(0, 1), duration = 20, distance = 35.0, discount = 0.3),
+                trip(0, listOf(2, 0), duration = 12, distance = 18.0),
+                trip(0, listOf(1), duration = 25, distance = 21.0),
+                trip(0, listOf(2, 1), duration = 9, distance = 23.0, discount = 0.3),
+                trip(2, listOf(2), duration = 12, distance = 8.0),
+                trip(1, listOf(1, 2, 0), duration = 24, distance = 10.0, discount = 0.3),
+                trip(2, listOf(1), duration = 18, distance = 14.0, discount = 0.3)))
+
+        @Test
+        fun test05() = testSmartPassengers(setOf(), taxiPark(0..2, 0..2,
+                trip(1, listOf(0, 1), duration = 4, distance = 13.0),
+                trip(2, listOf(1), duration = 17, distance = 3.0, discount = 0.4),
+                trip(0, listOf(1), duration = 39, distance = 37.0),
+                trip(0, listOf(0, 2), duration = 3, distance = 30.0),
+                trip(2, listOf(2), duration = 31, distance = 34.0),
+                trip(1, listOf(2, 1), duration = 38, distance = 21.0, discount = 0.1),
+                trip(1, listOf(1, 2), duration = 9, distance = 21.0),
+                trip(2, listOf(0), duration = 22, distance = 37.0, discount = 0.1),
+                trip(2, listOf(1), duration = 27, distance = 7.0, discount = 0.2),
+                trip(0, listOf(2, 1, 0), duration = 9, distance = 0.0, discount = 0.4),
+                trip(2, listOf(2), duration = 31, distance = 23.0, discount = 0.4),
+                trip(1, listOf(1, 2, 0), duration = 20, distance = 31.0)))
+
+        @Test
+        fun test06() = testSmartPassengers(setOf(2), taxiPark(0..2, 0..2,
+                trip(1, listOf(1), duration = 19, distance = 23.0),
+                trip(2, listOf(2), duration = 16, distance = 39.0, discount = 0.1),
+                trip(1, listOf(1), duration = 19, distance = 27.0),
+                trip(2, listOf(1), duration = 9, distance = 1.0),
+                trip(0, listOf(2, 1, 0), duration = 24, distance = 24.0),
+                trip(0, listOf(0), duration = 9, distance = 13.0, discount = 0.1),
+                trip(1, listOf(2, 0), duration = 36, distance = 20.0, discount = 0.1),
+                trip(1, listOf(2, 1), duration = 16, distance = 6.0, discount = 0.2),
+                trip(2, listOf(0, 1), duration = 27, distance = 8.0),
+                trip(1, listOf(2), duration = 15, distance = 31.0, discount = 0.2),
+                trip(2, listOf(0, 2, 1), duration = 0, distance = 1.0),
+                trip(2, listOf(0, 2), duration = 15, distance = 34.0, discount = 0.3)))
+
+        @Test
+        fun test07() = testSmartPassengers(setOf(), taxiPark(0..2, 0..2,
+                trip(1, listOf(2, 0), duration = 6, distance = 18.0, discount = 0.3),
+                trip(1, listOf(1), duration = 33, distance = 12.0),
+                trip(2, listOf(0, 1, 2), duration = 34, distance = 4.0),
+                trip(1, listOf(2, 1), duration = 19, distance = 33.0),
+                trip(1, listOf(1), duration = 5, distance = 1.0),
+                trip(2, listOf(2), duration = 18, distance = 34.0),
+                trip(2, listOf(2), duration = 15, distance = 31.0, discount = 0.1),
+                trip(2, listOf(1), duration = 14, distance = 9.0, discount = 0.3),
+                trip(0, listOf(1), duration = 10, distance = 31.0),
+                trip(2, listOf(0, 2), duration = 21, distance = 36.0),
+                trip(2, listOf(1), duration = 22, distance = 22.0, discount = 0.1),
+                trip(1, listOf(2), duration = 0, distance = 39.0, discount = 0.3)))
+
+        @Test
+        fun test08() = testSmartPassengers(setOf(), taxiPark(0..2, 0..2,
+                trip(1, listOf(0), duration = 28, distance = 17.0),
+                trip(1, listOf(2, 1), duration = 18, distance = 24.0, discount = 0.2),
+                trip(0, listOf(2, 1), duration = 23, distance = 34.0, discount = 0.2),
+                trip(2, listOf(1, 0), duration = 12, distance = 3.0),
+                trip(0, listOf(0, 1, 2), duration = 24, distance = 3.0),
+                trip(0, listOf(1, 2), duration = 28, distance = 37.0),
+                trip(2, listOf(2, 1), duration = 11, distance = 38.0, discount = 0.3),
+                trip(1, listOf(1), duration = 22, distance = 2.0, discount = 0.2),
+                trip(0, listOf(0), duration = 0, distance = 32.0),
+                trip(0, listOf(0, 2, 1), duration = 31, distance = 0.0),
+                trip(0, listOf(1), duration = 6, distance = 28.0),
+                trip(2, listOf(2), duration = 16, distance = 4.0)))
+
+        @Test
+        fun test09() = testSmartPassengers(setOf(0, 1, 2, 5), taxiPark(0..9, 0..9,
+                trip(9, listOf(7, 4, 0), duration = 2, distance = 33.0, discount = 0.3),
+                trip(0, listOf(7), duration = 0, distance = 20.0),
+                trip(0, listOf(5), duration = 20, distance = 18.0),
+                trip(8, listOf(5), duration = 21, distance = 21.0, discount = 0.1),
+                trip(5, listOf(0, 9), duration = 21, distance = 11.0, discount = 0.3),
+                trip(2, listOf(9), duration = 22, distance = 10.0, discount = 0.3),
+                trip(8, listOf(2, 1), duration = 10, distance = 24.0, discount = 0.4),
+                trip(6, listOf(9), duration = 1, distance = 21.0),
+                trip(4, listOf(1), duration = 16, distance = 25.0, discount = 0.2),
+                trip(7, listOf(3, 7, 5), duration = 12, distance = 34.0),
+                trip(5, listOf(2, 7), duration = 30, distance = 1.0),
+                trip(0, listOf(0), duration = 33, distance = 9.0, discount = 0.1),
+                trip(7, listOf(6), duration = 19, distance = 38.0),
+                trip(3, listOf(5, 4, 6), duration = 37, distance = 14.0),
+                trip(6, listOf(8, 5, 7), duration = 32, distance = 7.0, discount = 0.3),
+                trip(8, listOf(1, 4), duration = 14, distance = 8.0, discount = 0.2),
+                trip(0, listOf(8, 9, 6), duration = 21, distance = 32.0),
+                trip(7, listOf(5, 6), duration = 8, distance = 31.0, discount = 0.4),
+                trip(3, listOf(9, 3, 7), duration = 38, distance = 28.0, discount = 0.4),
+                trip(9, listOf(0), duration = 27, distance = 27.0, discount = 0.4),
+                trip(1, listOf(6, 9, 7, 4), duration = 0, distance = 13.0),
+                trip(2, listOf(6), duration = 0, distance = 9.0, discount = 0.3),
+                trip(8, listOf(5), duration = 7, distance = 15.0),
+                trip(5, listOf(9, 6, 4), duration = 7, distance = 30.0),
+                trip(6, listOf(7), duration = 28, distance = 27.0, discount = 0.2),
+                trip(6, listOf(7, 8), duration = 15, distance = 11.0, discount = 0.4),
+                trip(1, listOf(9), duration = 16, distance = 12.0, discount = 0.1),
+                trip(0, listOf(9, 7, 2, 1), duration = 38, distance = 32.0),
+                trip(6, listOf(2), duration = 38, distance = 25.0, discount = 0.4),
+                trip(0, listOf(9, 7, 6), duration = 38, distance = 29.0, discount = 0.1),
+                trip(2, listOf(9, 7, 8), duration = 26, distance = 7.0),
+                trip(7, listOf(5), duration = 34, distance = 22.0),
+                trip(5, listOf(4, 8, 5), duration = 38, distance = 17.0, discount = 0.2),
+                trip(0, listOf(9), duration = 30, distance = 18.0),
+                trip(5, listOf(2, 5), duration = 25, distance = 37.0, discount = 0.4),
+                trip(0, listOf(0, 4), duration = 14, distance = 21.0),
+                trip(9, listOf(5, 3, 7), duration = 7, distance = 23.0, discount = 0.2),
+                trip(6, listOf(4, 0, 1), duration = 36, distance = 0.0),
+                trip(9, listOf(3, 8, 7), duration = 3, distance = 31.0),
+                trip(9, listOf(0), duration = 6, distance = 22.0, discount = 0.1))
+        )
+
+        @Test
+        fun test10() = testSmartPassengers(setOf(3, 8), taxiPark(0..9, 0..9,
+                trip(8, listOf(5, 1), duration = 27, distance = 28.0),
+                trip(9, listOf(0, 3, 8, 2), duration = 15, distance = 20.0),
+                trip(4, listOf(4, 3, 8), duration = 15, distance = 20.0, discount = 0.1),
+                trip(4, listOf(3, 7), duration = 28, distance = 27.0),
+                trip(7, listOf(7), duration = 6, distance = 32.0, discount = 0.2),
+                trip(2, listOf(6), duration = 2, distance = 30.0),
+                trip(8, listOf(2, 7, 4, 3), duration = 4, distance = 2.0, discount = 0.2),
+                trip(5, listOf(6, 5), duration = 22, distance = 6.0, discount = 0.2),
+                trip(7, listOf(8), duration = 12, distance = 0.0, discount = 0.3),
+                trip(1, listOf(5, 8, 4, 9), duration = 36, distance = 6.0),
+                trip(4, listOf(8), duration = 9, distance = 32.0, discount = 0.3),
+                trip(0, listOf(4), duration = 6, distance = 31.0),
+                trip(3, listOf(2, 8, 6), duration = 10, distance = 31.0, discount = 0.4),
+                trip(1, listOf(7, 6), duration = 38, distance = 16.0),
+                trip(6, listOf(7, 8), duration = 35, distance = 7.0),
+                trip(7, listOf(9, 6), duration = 12, distance = 19.0),
+                trip(9, listOf(2), duration = 7, distance = 13.0),
+                trip(0, listOf(6), duration = 30, distance = 8.0),
+                trip(3, listOf(6), duration = 18, distance = 23.0, discount = 0.2),
+                trip(2, listOf(9), duration = 22, distance = 12.0),
+                trip(5, listOf(4), duration = 1, distance = 35.0, discount = 0.1),
+                trip(6, listOf(8), duration = 2, distance = 25.0, discount = 0.1),
+                trip(1, listOf(8, 4, 7, 5), duration = 13, distance = 20.0),
+                trip(5, listOf(7), duration = 3, distance = 18.0),
+                trip(0, listOf(1, 8, 5), duration = 7, distance = 30.0, discount = 0.3),
+                trip(7, listOf(6, 1, 9), duration = 36, distance = 4.0, discount = 0.3),
+                trip(0, listOf(8, 0), duration = 13, distance = 29.0, discount = 0.4),
+                trip(3, listOf(7, 9, 2), duration = 33, distance = 22.0),
+                trip(2, listOf(7, 6), duration = 4, distance = 30.0),
+                trip(5, listOf(4, 9, 3), duration = 32, distance = 5.0, discount = 0.2),
+                trip(6, listOf(9), duration = 24, distance = 14.0),
+                trip(6, listOf(8, 2), duration = 31, distance = 29.0),
+                trip(4, listOf(6), duration = 35, distance = 2.0),
+                trip(3, listOf(7, 8), duration = 8, distance = 27.0, discount = 0.3),
+                trip(8, listOf(5, 7), duration = 9, distance = 32.0, discount = 0.1),
+                trip(7, listOf(1, 5, 9), duration = 16, distance = 6.0),
+                trip(0, listOf(9), duration = 30, distance = 36.0),
+                trip(5, listOf(3, 8, 7, 6), duration = 25, distance = 24.0, discount = 0.2),
+                trip(8, listOf(6, 3), duration = 11, distance = 36.0, discount = 0.1),
+                trip(3, listOf(3, 4, 1), duration = 2, distance = 11.0)))
+
+        @Test
+        fun test11() = testSmartPassengers(setOf(5, 7), taxiPark(0..3, 0..9,
+                trip(3, listOf(9, 0), duration = 5, distance = 7.0),
+                trip(3, listOf(5, 6, 3, 9), duration = 20, distance = 13.0),
+                trip(0, listOf(4, 3), duration = 4, distance = 25.0),
+                trip(0, listOf(4, 5), duration = 10, distance = 20.0, discount = 0.4),
+                trip(2, listOf(1, 2), duration = 32, distance = 4.0),
+                trip(2, listOf(0, 9), duration = 26, distance = 20.0),
+                trip(3, listOf(2, 5, 9), duration = 4, distance = 9.0, discount = 0.2),
+                trip(3, listOf(6, 5, 7), duration = 24, distance = 11.0, discount = 0.1)))
+    }
+  learner_created: false
+- name: test/taxipark/TestTask5TheMostFrequentTripDurationPeriod.kt
+  visible: true
+  text: |-
+    package taxipark
+
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestTask5TheMostFrequentTripDurationPeriod {
+
+        private fun testDurationPeriod(expected: Set<IntRange?>, tp: TaxiPark) {
+            val actual = tp.findTheMostFrequentTripDurationPeriod()
+            val message = "Wrong result for 'findTheMostFrequentTripDurationPeriod()': $actual."
+            if (expected.size <= 1) {
+                Assert.assertEquals(
+                        message + tp.display(),
+                        expected.firstOrNull(), actual)
+            } else {
+                Assert.assertTrue(message +
+                        tp.display() +
+                        "\nPossible results: $expected" +
+                        "\nActual: $actual\n",
+                        actual?.let { it in expected } ?: expected.isEmpty())
+            }
+        }
+
+        @Test
+        fun test00() = testDurationPeriod(setOf(null), taxiPark(0..1, 0..10))
+
+        @Test
+        fun test01() {
+            // The period 30..39 is the most frequent since there are two trips (duration 30 and 35)
+            testDurationPeriod(setOf(30..39), taxiPark(1..3, 1..5,
+                    trip(1, 1, duration = 10),
+                    trip(3, 4, duration = 30),
+                    trip(1, 2, duration = 20),
+                    trip(2, 3, duration = 35)))
+        }
+
+        @Test
+        fun test02() = testDurationPeriod(setOf(30..39), taxiPark(0..5, 0..9,
+                trip(0, listOf(2, 9), duration = 14, distance = 25.0),
+                trip(1, listOf(8), duration = 39, distance = 37.0, discount = 0.2),
+                trip(5, listOf(0, 5), duration = 27, distance = 28.0, discount = 0.3),
+                trip(4, listOf(0, 6), duration = 33, distance = 14.0),
+                trip(2, listOf(5, 1, 4, 3), duration = 2, distance = 15.0),
+                trip(4, listOf(7), duration = 27, distance = 2.0),
+                trip(4, listOf(4, 6), duration = 31, distance = 31.0),
+                trip(3, listOf(9, 0), duration = 34, distance = 7.0),
+                trip(5, listOf(3), duration = 25, distance = 33.0),
+                trip(1, listOf(0, 7, 2, 3), duration = 13, distance = 17.0))
+        )
+
+        @Test
+        fun test03() = testDurationPeriod(setOf(0..9), taxiPark(0..5, 0..9,
+                trip(1, listOf(1, 6), duration = 9, distance = 0.0, discount = 0.2),
+                trip(3, listOf(1), duration = 9, distance = 22.0, discount = 0.3),
+                trip(2, listOf(9, 3), duration = 3, distance = 26.0),
+                trip(5, listOf(7), duration = 19, distance = 20.0),
+                trip(4, listOf(3, 8), duration = 4, distance = 30.0, discount = 0.3),
+                trip(4, listOf(7, 8, 5, 2), duration = 1, distance = 33.0, discount = 0.3),
+                trip(4, listOf(9), duration = 4, distance = 20.0),
+                trip(5, listOf(9), duration = 16, distance = 10.0),
+                trip(4, listOf(0, 6), duration = 6, distance = 36.0),
+                trip(1, listOf(6, 0), duration = 20, distance = 31.0, discount = 0.1)))
+
+        @Test
+        fun test04() = testDurationPeriod(setOf(10..19), taxiPark(0..5, 0..9,
+                trip(4, listOf(3, 2), duration = 12, distance = 17.0, discount = 0.4),
+                trip(4, listOf(5), duration = 16, distance = 14.0),
+                trip(4, listOf(1), duration = 29, distance = 34.0),
+                trip(3, listOf(4, 0), duration = 37, distance = 38.0),
+                trip(0, listOf(7), duration = 3, distance = 0.0),
+                trip(0, listOf(1, 6, 3), duration = 33, distance = 26.0),
+                trip(0, listOf(9, 2), duration = 21, distance = 2.0),
+                trip(1, listOf(9), duration = 27, distance = 12.0),
+                trip(5, listOf(1, 6), duration = 19, distance = 23.0),
+                trip(3, listOf(5, 9, 2), duration = 10, distance = 39.0)))
+
+        @Test
+        fun test05() = testDurationPeriod(setOf(0..9, 10..19, 20..29), taxiPark(0..5, 0..9,
+                trip(0, listOf(8), duration = 20, distance = 22.0, discount = 0.3),
+                trip(4, listOf(3, 5), duration = 12, distance = 25.0, discount = 0.4),
+                trip(2, listOf(2, 8), duration = 28, distance = 6.0),
+                trip(5, listOf(0, 3, 4), duration = 24, distance = 4.0),
+                trip(2, listOf(2, 8), duration = 19, distance = 20.0),
+                trip(4, listOf(0, 2), duration = 39, distance = 4.0, discount = 0.1),
+                trip(3, listOf(4, 2), duration = 17, distance = 27.0),
+                trip(2, listOf(4), duration = 6, distance = 11.0),
+                trip(2, listOf(5), duration = 1, distance = 18.0),
+                trip(5, listOf(2), duration = 3, distance = 35.0, discount = 0.4)))
+
+        @Test
+        fun test06() = testDurationPeriod(setOf(0..9, 30..39), taxiPark(0..9, 0..19,
+                trip(7, listOf(18, 5), duration = 21, distance = 17.0),
+                trip(6, listOf(8, 11), duration = 37, distance = 29.0, discount = 0.1),
+                trip(5, listOf(19, 11, 10, 4), duration = 33, distance = 12.0, discount = 0.2),
+                trip(7, listOf(4, 3), duration = 8, distance = 2.0),
+                trip(5, listOf(18), duration = 1, distance = 11.0),
+                trip(8, listOf(13, 10), duration = 26, distance = 4.0, discount = 0.4),
+                trip(0, listOf(14, 16, 1), duration = 35, distance = 33.0),
+                trip(8, listOf(13, 8), duration = 9, distance = 29.0),
+                trip(0, listOf(12), duration = 31, distance = 5.0),
+                trip(5, listOf(2, 11, 4), duration = 22, distance = 18.0, discount = 0.3),
+                trip(5, listOf(19, 13), duration = 21, distance = 16.0, discount = 0.3),
+                trip(6, listOf(4), duration = 11, distance = 16.0),
+                trip(9, listOf(14, 16), duration = 3, distance = 9.0),
+                trip(7, listOf(11, 10, 3, 9), duration = 27, distance = 35.0, discount = 0.1),
+                trip(9, listOf(13), duration = 9, distance = 22.0),
+                trip(1, listOf(12), duration = 36, distance = 8.0),
+                trip(1, listOf(11, 13), duration = 7, distance = 15.0),
+                trip(3, listOf(10, 0), duration = 36, distance = 6.0),
+                trip(3, listOf(16, 12), duration = 28, distance = 27.0),
+                trip(4, listOf(14, 6), duration = 8, distance = 34.0, discount = 0.4),
+                trip(0, listOf(9), duration = 16, distance = 7.0, discount = 0.1),
+                trip(7, listOf(11, 7, 3), duration = 18, distance = 2.0),
+                trip(5, listOf(3), duration = 15, distance = 39.0, discount = 0.2),
+                trip(3, listOf(14, 7), duration = 31, distance = 16.0),
+                trip(2, listOf(4), duration = 16, distance = 2.0, discount = 0.3),
+                trip(7, listOf(7), duration = 14, distance = 36.0),
+                trip(0, listOf(11), duration = 38, distance = 23.0),
+                trip(7, listOf(12, 6, 3, 4), duration = 19, distance = 3.0, discount = 0.1),
+                trip(6, listOf(13, 3, 9), duration = 2, distance = 10.0, discount = 0.2),
+                trip(7, listOf(8, 2, 3, 19), duration = 21, distance = 6.0, discount = 0.3)))
+
+        @Test
+        fun test07() = testDurationPeriod(setOf(0..9), taxiPark(0..9, 0..19,
+                trip(5, listOf(4, 18), duration = 13, distance = 32.0),
+                trip(7, listOf(7, 9, 16, 13), duration = 8, distance = 11.0),
+                trip(9, listOf(3, 18, 1), duration = 4, distance = 27.0, discount = 0.1),
+                trip(4, listOf(2, 3, 8), duration = 7, distance = 8.0),
+                trip(1, listOf(14, 4), duration = 9, distance = 34.0),
+                trip(2, listOf(8, 4), duration = 9, distance = 19.0, discount = 0.1),
+                trip(4, listOf(8), duration = 35, distance = 24.0, discount = 0.3),
+                trip(8, listOf(14, 13), duration = 11, distance = 4.0),
+                trip(9, listOf(5, 1), duration = 20, distance = 18.0, discount = 0.2),
+                trip(2, listOf(9, 13), duration = 24, distance = 13.0),
+                trip(1, listOf(5, 14, 13), duration = 1, distance = 4.0),
+                trip(1, listOf(15, 5), duration = 17, distance = 34.0),
+                trip(0, listOf(16), duration = 18, distance = 7.0),
+                trip(5, listOf(17), duration = 1, distance = 34.0, discount = 0.1),
+                trip(1, listOf(11, 3, 7), duration = 9, distance = 23.0, discount = 0.2),
+                trip(8, listOf(8, 11), duration = 7, distance = 34.0, discount = 0.4),
+                trip(8, listOf(3), duration = 5, distance = 20.0),
+                trip(9, listOf(3, 13, 12, 17), duration = 26, distance = 19.0, discount = 0.1),
+                trip(8, listOf(16, 7), duration = 35, distance = 9.0, discount = 0.2),
+                trip(0, listOf(16), duration = 28, distance = 5.0, discount = 0.1),
+                trip(6, listOf(4), duration = 27, distance = 38.0),
+                trip(4, listOf(7, 9), duration = 38, distance = 20.0),
+                trip(9, listOf(6, 13), duration = 19, distance = 5.0),
+                trip(5, listOf(4), duration = 20, distance = 5.0, discount = 0.4),
+                trip(3, listOf(14), duration = 32, distance = 37.0),
+                trip(1, listOf(11), duration = 19, distance = 11.0, discount = 0.4),
+                trip(3, listOf(6, 16), duration = 39, distance = 10.0),
+                trip(7, listOf(4, 6, 11), duration = 8, distance = 16.0, discount = 0.4),
+                trip(0, listOf(5), duration = 19, distance = 39.0, discount = 0.1),
+                trip(5, listOf(8, 19), duration = 35, distance = 31.0, discount = 0.4)))
+
+        @Test
+        fun test08() = testDurationPeriod(setOf(340..349), taxiPark(0..5, 0..9,
+                trip(3, listOf(7, 3, 4), duration = 400, distance = 890.0),
+                trip(5, listOf(4, 1), duration = 10, distance = 897.0, discount = 0.1),
+                trip(0, listOf(4, 2), duration = 672, distance = 818.0),
+                trip(5, listOf(9), duration = 715, distance = 807.0, discount = 0.2),
+                trip(4, listOf(5, 3, 2), duration = 462, distance = 816.0),
+                trip(2, listOf(6, 2), duration = 824, distance = 948.0),
+                trip(5, listOf(5, 3, 7), duration = 261, distance = 26.0),
+                trip(3, listOf(8, 3, 5), duration = 575, distance = 57.0, discount = 0.1),
+                trip(3, listOf(2, 1), duration = 341, distance = 607.0, discount = 0.3),
+                trip(4, listOf(3, 8, 6), duration = 349, distance = 26.0)))
+
+        @Test
+        fun test09() = testDurationPeriod(
+                setOf(420..429, 150..159, 890..899, 530..539, 470..479, 70..79, 430..439, 260..269, 80..89, 60..69),
+                taxiPark(0..5, 0..9,
+                        trip(5, listOf(6, 8, 3), duration = 425, distance = 230.0, discount = 0.3),
+                        trip(3, listOf(4), duration = 151, distance = 351.0),
+                        trip(0, listOf(6), duration = 892, distance = 165.0, discount = 0.2),
+                        trip(2, listOf(4, 7, 6), duration = 538, distance = 699.0, discount = 0.3),
+                        trip(2, listOf(3), duration = 477, distance = 706.0, discount = 0.3),
+                        trip(2, listOf(6, 7, 1), duration = 79, distance = 924.0),
+                        trip(3, listOf(4), duration = 433, distance = 404.0, discount = 0.3),
+                        trip(0, listOf(3, 5), duration = 264, distance = 217.0),
+                        trip(2, listOf(5), duration = 81, distance = 8.0, discount = 0.3),
+                        trip(0, listOf(5), duration = 67, distance = 613.0)))
+
+        @Test
+        fun test10() = testDurationPeriod(setOf(320..329), taxiPark(0..5, 0..9,
+                trip(0, listOf(8, 1, 9), duration = 716, distance = 164.0),
+                trip(3, listOf(9), duration = 406, distance = 180.0, discount = 0.1),
+                trip(2, listOf(8), duration = 856, distance = 104.0, discount = 0.2),
+                trip(5, listOf(4), duration = 592, distance = 270.0),
+                trip(0, listOf(4, 7, 6, 2), duration = 101, distance = 880.0),
+                trip(5, listOf(5, 2, 0), duration = 323, distance = 253.0, discount = 0.4),
+                trip(2, listOf(1, 0, 4), duration = 127, distance = 99.0),
+                trip(0, listOf(4, 6, 2), duration = 324, distance = 182.0),
+                trip(1, listOf(6, 0), duration = 325, distance = 36.0),
+                trip(4, listOf(0, 9), duration = 213, distance = 182.0)))
+
+        @Test
+        fun test11() = testDurationPeriod(setOf(0..9), taxiPark(0..9, 0..19,
+                trip(0, listOf(15, 14, 10), duration = 0, distance = 19.0),
+                trip(0, listOf(18, 8, 7, 14), duration = 15, distance = 1.0),
+                trip(9, listOf(4, 19, 0), duration = 9, distance = 15.0),
+                trip(0, listOf(12, 7, 2), duration = 13, distance = 19.0, discount = 0.3),
+                trip(6, listOf(11, 8), duration = 14, distance = 19.0),
+                trip(0, listOf(2), duration = 12, distance = 14.0, discount = 0.3),
+                trip(8, listOf(1, 17, 9, 10), duration = 16, distance = 3.0),
+                trip(0, listOf(17), duration = 10, distance = 6.0, discount = 0.4),
+                trip(1, listOf(8, 1), duration = 7, distance = 5.0),
+                trip(9, listOf(6), duration = 3, distance = 6.0),
+                trip(4, listOf(12, 19, 7, 0), duration = 9, distance = 10.0, discount = 0.4),
+                trip(7, listOf(16), duration = 11, distance = 12.0, discount = 0.1),
+                trip(9, listOf(6, 14), duration = 9, distance = 7.0),
+                trip(5, listOf(4), duration = 1, distance = 16.0, discount = 0.4),
+                trip(2, listOf(15, 7, 12), duration = 9, distance = 6.0),
+                trip(1, listOf(13), duration = 2, distance = 7.0, discount = 0.1),
+                trip(5, listOf(0, 18, 3), duration = 10, distance = 11.0),
+                trip(0, listOf(9), duration = 6, distance = 18.0, discount = 0.4),
+                trip(1, listOf(9, 0, 3, 14), duration = 0, distance = 15.0),
+                trip(1, listOf(10), duration = 17, distance = 15.0),
+                trip(6, listOf(0, 18, 13), duration = 3, distance = 5.0),
+                trip(7, listOf(19, 10), duration = 0, distance = 8.0),
+                trip(8, listOf(4, 15), duration = 9, distance = 17.0, discount = 0.1),
+                trip(6, listOf(15), duration = 13, distance = 1.0),
+                trip(2, listOf(3), duration = 13, distance = 15.0, discount = 0.2),
+                trip(3, listOf(13, 11, 15), duration = 2, distance = 9.0),
+                trip(2, listOf(12), duration = 2, distance = 16.0),
+                trip(6, listOf(13, 18), duration = 12, distance = 14.0),
+                trip(8, listOf(19), duration = 1, distance = 13.0, discount = 0.4),
+                trip(6, listOf(9, 13, 1, 19), duration = 5, distance = 14.0, discount = 0.2),
+                trip(4, listOf(8), duration = 15, distance = 8.0, discount = 0.2),
+                trip(6, listOf(16, 15), duration = 9, distance = 4.0),
+                trip(2, listOf(14, 0), duration = 7, distance = 2.0),
+                trip(5, listOf(18), duration = 7, distance = 19.0),
+                trip(9, listOf(15), duration = 15, distance = 10.0, discount = 0.4),
+                trip(7, listOf(7, 18), duration = 12, distance = 11.0),
+                trip(3, listOf(10, 19, 17), duration = 10, distance = 7.0),
+                trip(3, listOf(10), duration = 18, distance = 10.0, discount = 0.2),
+                trip(8, listOf(9, 15, 16, 19), duration = 19, distance = 12.0, discount = 0.3),
+                trip(5, listOf(13), duration = 16, distance = 11.0, discount = 0.3)))
+
+        @Test
+        fun test12() = testDurationPeriod(setOf(0..9, 10..19), taxiPark(0..9, 0..19,
+                trip(6, listOf(16), duration = 8, distance = 17.0),
+                trip(4, listOf(11), duration = 10, distance = 12.0),
+                trip(8, listOf(8, 13), duration = 14, distance = 4.0, discount = 0.1),
+                trip(6, listOf(19), duration = 14, distance = 9.0),
+                trip(4, listOf(18, 10), duration = 6, distance = 17.0, discount = 0.1),
+                trip(0, listOf(0), duration = 19, distance = 17.0, discount = 0.1),
+                trip(7, listOf(2, 15), duration = 12, distance = 9.0),
+                trip(9, listOf(11, 10, 7, 15), duration = 11, distance = 5.0),
+                trip(3, listOf(1, 18), duration = 5, distance = 14.0, discount = 0.3),
+                trip(2, listOf(19, 8), duration = 7, distance = 8.0, discount = 0.2),
+                trip(1, listOf(11), duration = 11, distance = 18.0),
+                trip(5, listOf(0, 18, 11, 14), duration = 6, distance = 17.0, discount = 0.3),
+                trip(6, listOf(11, 6), duration = 1, distance = 4.0),
+                trip(5, listOf(11), duration = 10, distance = 19.0),
+                trip(8, listOf(0, 4), duration = 2, distance = 12.0, discount = 0.4),
+                trip(6, listOf(16, 14), duration = 16, distance = 0.0),
+                trip(3, listOf(12), duration = 2, distance = 15.0, discount = 0.2),
+                trip(5, listOf(15, 6), duration = 5, distance = 6.0),
+                trip(8, listOf(4, 19), duration = 12, distance = 0.0),
+                trip(4, listOf(8, 14), duration = 4, distance = 19.0),
+                trip(3, listOf(0), duration = 14, distance = 19.0, discount = 0.3),
+                trip(3, listOf(9), duration = 16, distance = 5.0),
+                trip(2, listOf(7, 6, 12), duration = 4, distance = 19.0),
+                trip(9, listOf(0, 1), duration = 10, distance = 1.0),
+                trip(8, listOf(16), duration = 10, distance = 4.0),
+                trip(7, listOf(16, 3), duration = 12, distance = 10.0, discount = 0.4),
+                trip(9, listOf(18, 0), duration = 15, distance = 14.0, discount = 0.2),
+                trip(9, listOf(10), duration = 2, distance = 2.0, discount = 0.2),
+                trip(4, listOf(11, 14, 18), duration = 4, distance = 3.0),
+                trip(7, listOf(5), duration = 0, distance = 4.0),
+                trip(9, listOf(13, 17), duration = 0, distance = 8.0, discount = 0.3),
+                trip(3, listOf(8, 5), duration = 16, distance = 3.0),
+                trip(9, listOf(19, 7), duration = 1, distance = 3.0),
+                trip(6, listOf(4, 17), duration = 10, distance = 18.0),
+                trip(2, listOf(7, 12), duration = 9, distance = 6.0, discount = 0.2),
+                trip(6, listOf(4, 11), duration = 8, distance = 5.0),
+                trip(5, listOf(0), duration = 3, distance = 15.0, discount = 0.4),
+                trip(3, listOf(1), duration = 1, distance = 13.0),
+                trip(5, listOf(11), duration = 17, distance = 16.0),
+                trip(3, listOf(2, 19, 8, 1), duration = 10, distance = 15.0)))
+
+        @Test
+        fun test13() {
+            testDurationPeriod(setOf(30..39, 4320..4329), taxiPark(1..2, 1..2,
+                    trip(1, 1, duration = 33),
+                    trip(2, 2, duration = 4320)))
+        }
+    }
+  learner_created: false
+- name: test/taxipark/TestTask6ParetoPrinciple.kt
+  visible: true
+  text: |-
+    package taxipark
+
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestTask6ParetoPrinciple {
+
+        private fun testPareto(expected: Boolean, tp: TaxiPark) {
+            val message = "Wrong result for 'checkParetoPrinciple()'." + tp.display()
+            Assert.assertEquals(message, expected, tp.checkParetoPrinciple())
+        }
+
+        @Test
+        fun testParetoPrincipleSucceeds() {
+            testPareto(true, taxiPark(1..5, 1..4,
+                    trip(1, 1, 20, 20.0),
+                    trip(1, 2, 20, 20.0),
+                    trip(1, 3, 20, 20.0),
+                    trip(1, 4, 20, 20.0),
+                    trip(2, 1, 20, 20.0)))
+            // The income of driver #1: 160.0;
+            // the total income of drivers #2..5: 40.0.
+            // The first driver constitutes exactly 20% of the total of five drivers
+            // and his relative income is 160.0 / 200.0 = 80%.
+        }
+
+        @Test
+        fun testParetoPrincipleFails() {
+            testPareto(false, taxiPark(1..5, 1..4,
+                    trip(1, 1, 20, 20.0),
+                    trip(1, 2, 20, 20.0),
+                    trip(1, 3, 20, 20.0),
+                    trip(2, 4, 20, 20.0),
+                    trip(3, 1, 20, 20.0)))
+            // The income of driver #1: 120.0;
+            // the total income of drivers #2..5: 80.0.
+            // The first driver constitutes 20% of the total of five drivers
+            // but his relative income is 120.0 / 200.0 = 60%
+            // which is less than 80%.
+        }
+
+        @Test
+        fun testParetoPrincipleNoTrips() = testPareto(false, taxiPark(1..5, 1..4))
+
+        @Test
+        fun test1() = testPareto(true, taxiPark(1..5, 1..4,
+                trip(1, 1, 20, 20.0),
+                trip(1, 2, 20, 20.0),
+                trip(1, 3, 20, 20.0),
+                trip(1, 4, 20, 20.0),
+                trip(2, 1, 20, 19.0)))
+
+        @Test
+        fun test2() = testPareto(false, taxiPark(1..5, 1..4,
+                trip(1, 1, 20, 20.0),
+                trip(1, 2, 20, 20.0),
+                trip(1, 3, 20, 20.0),
+                trip(1, 4, 20, 20.0),
+                trip(2, 1, 20, 21.0)))
+
+        @Test
+        fun test3() = testPareto(true, taxiPark(0..4, 0..9,
+                trip(4, listOf(2), duration = 3, distance = 23.0, discount = 0.3),
+                trip(4, listOf(4), duration = 27, distance = 8.0, discount = 0.1),
+                trip(4, listOf(7), duration = 25, distance = 29.0, discount = 0.2),
+                trip(3, listOf(7), duration = 1, distance = 8.0, discount = 0.4),
+                trip(0, listOf(2), duration = 18, distance = 2.0, discount = 0.3),
+                trip(4, listOf(7), duration = 26, distance = 27.0),
+                trip(4, listOf(9), duration = 11, distance = 23.0),
+                trip(4, listOf(4, 2, 0), duration = 5, distance = 20.0, discount = 0.1),
+                trip(2, listOf(6, 7), duration = 4, distance = 13.0),
+                trip(4, listOf(2, 8, 1, 4), duration = 19, distance = 24.0, discount = 0.3),
+                trip(4, listOf(6), duration = 17, distance = 19.0),
+                trip(0, listOf(9), duration = 15, distance = 7.0, discount = 0.2),
+                trip(0, listOf(7, 3), duration = 0, distance = 10.0, discount = 0.2),
+                trip(4, listOf(9, 3), duration = 15, distance = 13.0),
+                trip(3, listOf(0), duration = 11, distance = 3.0, discount = 0.2)))
+
+        @Test
+        fun test4() = testPareto(true, taxiPark(0..4, 0..9,
+                trip(4, listOf(7, 1, 0), duration = 3, distance = 3.0, discount = 0.1),
+                trip(3, listOf(2), duration = 14, distance = 27.0, discount = 0.2),
+                trip(3, listOf(6), duration = 25, distance = 21.0),
+                trip(1, listOf(3), duration = 9, distance = 0.0),
+                trip(0, listOf(7, 3, 2, 0), duration = 4, distance = 11.0, discount = 0.4),
+                trip(3, listOf(9, 1, 2, 3), duration = 28, distance = 17.0),
+                trip(3, listOf(3, 1), duration = 5, distance = 17.0, discount = 0.1),
+                trip(3, listOf(0, 1, 2), duration = 22, distance = 26.0),
+                trip(3, listOf(3, 8), duration = 15, distance = 21.0),
+                trip(3, listOf(6, 5), duration = 21, distance = 6.0, discount = 0.1),
+                trip(3, listOf(4), duration = 10, distance = 13.0),
+                trip(3, listOf(2, 7), duration = 13, distance = 22.0, discount = 0.1),
+                trip(1, listOf(4, 9), duration = 22, distance = 5.0, discount = 0.4),
+                trip(4, listOf(8, 7, 9), duration = 10, distance = 19.0, discount = 0.4),
+                trip(4, listOf(6), duration = 2, distance = 26.0, discount = 0.3)))
+
+        @Test
+        fun test5() = testPareto(false, taxiPark(0..5, 0..9,
+                trip(1, listOf(6, 1), duration = 22, distance = 12.0),
+                trip(0, listOf(5, 6), duration = 17, distance = 18.0),
+                trip(1, listOf(9, 7, 3, 1), duration = 30, distance = 14.0, discount = 0.1),
+                trip(0, listOf(2), duration = 0, distance = 2.0, discount = 0.1),
+                trip(0, listOf(4), duration = 0, distance = 1.0, discount = 0.4),
+                trip(0, listOf(7, 2, 4), duration = 25, distance = 24.0, discount = 0.1),
+                trip(0, listOf(2), duration = 28, distance = 2.0),
+                trip(0, listOf(9, 1, 3), duration = 6, distance = 15.0),
+                trip(0, listOf(0), duration = 27, distance = 22.0),
+                trip(0, listOf(4, 5, 7, 3), duration = 4, distance = 26.0, discount = 0.1)))
+
+        @Test
+        fun test7() = testPareto(true, taxiPark(0..9, 0..19,
+                trip(6, listOf(10, 3), duration = 16, distance = 3.0),
+                trip(1, listOf(17, 1, 6), duration = 28, distance = 24.0, discount = 0.4),
+                trip(1, listOf(13, 14), duration = 10, distance = 19.0, discount = 0.1),
+                trip(3, listOf(12, 0, 18), duration = 4, distance = 17.0, discount = 0.2),
+                trip(7, listOf(8, 0, 2, 7), duration = 14, distance = 22.0, discount = 0.1),
+                trip(8, listOf(15, 12), duration = 22, distance = 3.0, discount = 0.4),
+                trip(9, listOf(2, 4, 6, 0), duration = 20, distance = 0.0),
+                trip(9, listOf(14, 18), duration = 18, distance = 1.0, discount = 0.3),
+                trip(4, listOf(1, 0), duration = 2, distance = 10.0),
+                trip(7, listOf(16, 10, 9, 6), duration = 24, distance = 21.0, discount = 0.1),
+                trip(7, listOf(9), duration = 12, distance = 25.0, discount = 0.4),
+                trip(1, listOf(16, 1), duration = 22, distance = 19.0),
+                trip(7, listOf(17, 7, 5), duration = 15, distance = 10.0),
+                trip(6, listOf(12, 13, 10), duration = 4, distance = 13.0, discount = 0.3),
+                trip(4, listOf(14), duration = 10, distance = 7.0, discount = 0.3),
+                trip(1, listOf(2, 10, 3), duration = 25, distance = 1.0),
+                trip(1, listOf(6, 11), duration = 18, distance = 19.0),
+                trip(6, listOf(15), duration = 7, distance = 5.0, discount = 0.3),
+                trip(1, listOf(18, 3), duration = 29, distance = 28.0),
+                trip(7, listOf(14), duration = 17, distance = 25.0, discount = 0.3),
+                trip(6, listOf(10), duration = 11, distance = 19.0, discount = 0.3),
+                trip(7, listOf(15, 19), duration = 22, distance = 9.0),
+                trip(7, listOf(15, 19, 0), duration = 12, distance = 22.0),
+                trip(8, listOf(9, 19), duration = 1, distance = 4.0),
+                trip(7, listOf(5), duration = 19, distance = 21.0, discount = 0.3),
+                trip(1, listOf(12, 2, 1), duration = 16, distance = 12.0),
+                trip(7, listOf(13), duration = 10, distance = 17.0, discount = 0.2),
+                trip(7, listOf(19), duration = 17, distance = 28.0, discount = 0.4),
+                trip(0, listOf(10, 8), duration = 3, distance = 5.0, discount = 0.3),
+                trip(1, listOf(6, 17, 12), duration = 15, distance = 11.0),
+                trip(7, listOf(19), duration = 27, distance = 29.0),
+                trip(1, listOf(12, 11, 7, 5), duration = 22, distance = 21.0, discount = 0.1),
+                trip(8, listOf(11, 3, 2, 15), duration = 9, distance = 0.0),
+                trip(1, listOf(5, 8, 16), duration = 22, distance = 28.0),
+                trip(7, listOf(1), duration = 26, distance = 14.0),
+                trip(1, listOf(7, 5), duration = 22, distance = 15.0),
+                trip(8, listOf(14, 16), duration = 4, distance = 8.0),
+                trip(9, listOf(12, 6), duration = 7, distance = 0.0),
+                trip(4, listOf(1, 17, 2, 16), duration = 0, distance = 15.0),
+                trip(7, listOf(4, 18), duration = 23, distance = 21.0, discount = 0.2))
+        )
+
+        @Test
+        fun test8() = testPareto(false, taxiPark(0..9, 0..19,
+                trip(5, listOf(0, 3, 11), duration = 9, distance = 6.0, discount = 0.2),
+                trip(1, listOf(11, 17, 19, 10), duration = 13, distance = 27.0, discount = 0.3),
+                trip(1, listOf(19, 10, 6), duration = 29, distance = 26.0),
+                trip(1, listOf(16, 19), duration = 9, distance = 22.0),
+                trip(1, listOf(3, 4), duration = 29, distance = 13.0),
+                trip(9, listOf(5, 9), duration = 28, distance = 3.0, discount = 0.3),
+                trip(4, listOf(0, 11), duration = 19, distance = 10.0),
+                trip(8, listOf(19, 13, 2, 8), duration = 17, distance = 9.0, discount = 0.4),
+                trip(4, listOf(16, 17), duration = 11, distance = 16.0, discount = 0.1),
+                trip(4, listOf(16, 0, 13), duration = 15, distance = 20.0),
+                trip(8, listOf(1), duration = 15, distance = 15.0, discount = 0.3),
+                trip(1, listOf(7, 8), duration = 19, distance = 23.0, discount = 0.3),
+                trip(1, listOf(3), duration = 9, distance = 20.0, discount = 0.2),
+                trip(2, listOf(16), duration = 16, distance = 9.0, discount = 0.4),
+                trip(9, listOf(9), duration = 14, distance = 6.0, discount = 0.4),
+                trip(6, listOf(9, 2), duration = 2, distance = 2.0),
+                trip(1, listOf(6, 7), duration = 15, distance = 13.0, discount = 0.2),
+                trip(4, listOf(14), duration = 29, distance = 20.0),
+                trip(1, listOf(3, 18), duration = 27, distance = 29.0, discount = 0.2),
+                trip(4, listOf(14, 12), duration = 15, distance = 7.0),
+                trip(4, listOf(0, 5, 6), duration = 19, distance = 28.0),
+                trip(8, listOf(3, 10, 0), duration = 3, distance = 11.0),
+                trip(7, listOf(12, 13, 9), duration = 2, distance = 8.0, discount = 0.2),
+                trip(0, listOf(0), duration = 1, distance = 18.0),
+                trip(0, listOf(7), duration = 4, distance = 3.0),
+                trip(4, listOf(8), duration = 9, distance = 17.0),
+                trip(1, listOf(0, 15), duration = 14, distance = 16.0, discount = 0.2),
+                trip(1, listOf(0), duration = 19, distance = 10.0),
+                trip(1, listOf(9), duration = 28, distance = 21.0, discount = 0.3),
+                trip(1, listOf(0, 18), duration = 24, distance = 17.0),
+                trip(4, listOf(17, 8, 9), duration = 28, distance = 13.0),
+                trip(1, listOf(8, 6, 4), duration = 15, distance = 21.0, discount = 0.3),
+                trip(1, listOf(19), duration = 19, distance = 14.0),
+                trip(5, listOf(15), duration = 2, distance = 1.0),
+                trip(6, listOf(19, 6), duration = 7, distance = 13.0),
+                trip(4, listOf(2), duration = 18, distance = 20.0),
+                trip(1, listOf(8), duration = 24, distance = 29.0, discount = 0.4),
+                trip(1, listOf(13, 0, 7, 2), duration = 15, distance = 20.0, discount = 0.2),
+                trip(2, listOf(2, 14), duration = 19, distance = 8.0, discount = 0.2),
+                trip(6, listOf(19, 13), duration = 6, distance = 17.0, discount = 0.3)))
+
+        @Test
+        fun test9() = testPareto(true, taxiPark(0..19, 0..99,
+                trip(7, listOf(72), duration = 24, distance = 15.0, discount = 0.4),
+                trip(6, listOf(10, 57, 75, 35), duration = 35, distance = 7.0, discount = 0.3),
+                trip(12, listOf(20, 70, 64), duration = 8, distance = 14.0, discount = 0.1),
+                trip(13, listOf(14, 75, 71, 88), duration = 0, distance = 22.0, discount = 0.4),
+                trip(9, listOf(10, 94), duration = 14, distance = 15.0),
+                trip(8, listOf(51, 69, 18), duration = 3, distance = 26.0),
+                trip(8, listOf(94, 43), duration = 30, distance = 29.0, discount = 0.3),
+                trip(8, listOf(8), duration = 31, distance = 37.0),
+                trip(8, listOf(20, 60), duration = 38, distance = 22.0, discount = 0.4),
+                trip(1, listOf(62, 10), duration = 4, distance = 26.0, discount = 0.4),
+                trip(9, listOf(74), duration = 31, distance = 35.0),
+                trip(9, listOf(43, 29), duration = 21, distance = 16.0, discount = 0.1),
+                trip(5, listOf(93, 32, 92), duration = 18, distance = 14.0, discount = 0.4),
+                trip(7, listOf(97, 85, 16), duration = 22, distance = 3.0, discount = 0.2),
+                trip(8, listOf(83, 73), duration = 38, distance = 37.0, discount = 0.3),
+                trip(6, listOf(93), duration = 21, distance = 34.0),
+                trip(1, listOf(52), duration = 6, distance = 9.0),
+                trip(6, listOf(39, 19, 49, 68), duration = 39, distance = 1.0),
+                trip(19, listOf(79, 21, 77), duration = 21, distance = 22.0, discount = 0.1),
+                trip(9, listOf(81, 56, 67), duration = 29, distance = 28.0),
+                trip(8, listOf(63, 83), duration = 32, distance = 26.0),
+                trip(9, listOf(48, 56), duration = 28, distance = 19.0, discount = 0.4),
+                trip(9, listOf(31), duration = 30, distance = 8.0, discount = 0.1),
+                trip(9, listOf(8), duration = 34, distance = 21.0),
+                trip(19, listOf(59, 14, 96), duration = 37, distance = 3.0, discount = 0.1),
+                trip(9, listOf(74), duration = 13, distance = 33.0),
+                trip(13, listOf(2, 64), duration = 5, distance = 9.0, discount = 0.2),
+                trip(6, listOf(86), duration = 11, distance = 33.0),
+                trip(8, listOf(68), duration = 34, distance = 35.0, discount = 0.4),
+                trip(8, listOf(28), duration = 28, distance = 33.0),
+                trip(4, listOf(80, 64, 12), duration = 15, distance = 3.0, discount = 0.4),
+                trip(9, listOf(24, 68), duration = 18, distance = 23.0),
+                trip(19, listOf(76, 68, 42, 56), duration = 0, distance = 30.0),
+                trip(10, listOf(3, 53, 8, 59), duration = 6, distance = 19.0),
+                trip(18, listOf(29, 78), duration = 14, distance = 16.0, discount = 0.4),
+                trip(6, listOf(25, 40, 64), duration = 32, distance = 22.0, discount = 0.4),
+                trip(19, listOf(92, 43, 25, 84), duration = 28, distance = 36.0),
+                trip(8, listOf(1), duration = 7, distance = 28.0),
+                trip(15, listOf(76), duration = 1, distance = 26.0, discount = 0.2),
+                trip(9, listOf(58, 54, 8, 47), duration = 0, distance = 39.0, discount = 0.1),
+                trip(6, listOf(97), duration = 23, distance = 11.0),
+                trip(6, listOf(47, 36), duration = 17, distance = 12.0),
+                trip(15, listOf(0, 13), duration = 16, distance = 8.0),
+                trip(4, listOf(29, 53, 37, 0), duration = 9, distance = 23.0, discount = 0.2),
+                trip(15, listOf(82), duration = 7, distance = 23.0, discount = 0.2),
+                trip(14, listOf(3, 56), duration = 2, distance = 25.0),
+                trip(8, listOf(33, 26), duration = 29, distance = 33.0),
+                trip(1, listOf(13), duration = 35, distance = 1.0, discount = 0.3),
+                trip(9, listOf(32, 33), duration = 30, distance = 4.0),
+                trip(19, listOf(28), duration = 9, distance = 39.0, discount = 0.3))
+        )
+    }
+  learner_created: false
+- name: partId
+  visible: false
+  learner_created: false
+- name: assignmentKey
+  visible: false
+  learner_created: false
+feedback_link: https://www.coursera.org/learn/kotlin-for-java-developers/programming/xTPZT/taxi-park/discussions
+status: Unchecked
+feedback:
+  message: <html>Submission successful, please <a href="https://www.coursera.org/learn/kotlin-for-java-developers/programming/xTPZT/taxi-park/submission">check
+    the status on Coursera</a></html>
+  time: Sun, 15 Nov 2020 04:18:28 UTC
+record: -1
