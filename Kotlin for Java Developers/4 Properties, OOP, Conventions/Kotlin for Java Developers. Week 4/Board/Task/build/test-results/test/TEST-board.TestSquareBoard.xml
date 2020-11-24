@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="board.TestSquareBoard" tests="22" skipped="0" failures="0" errors="0" timestamp="2020-11-24T05:19:36" hostname="LAPTOP-JQEH2B7G" time="0.041">
+  <properties/>
+  <testcase name="test00AllCells" classname="board.TestSquareBoard" time="0.023"/>
+  <testcase name="test01Cell" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test02NoCell" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test03Row" classname="board.TestSquareBoard" time="0.004"/>
+  <testcase name="test04RowReversed" classname="board.TestSquareBoard" time="0.001"/>
+  <testcase name="test05RowWrongRange" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test06Neighbour" classname="board.TestSquareBoard" time="0.001"/>
+  <testcase name="test07AllCells" classname="board.TestSquareBoard" time="0.002"/>
+  <testcase name="test08Cell" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test09NoCell" classname="board.TestSquareBoard" time="0.001"/>
+  <testcase name="test10Row" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test11Column" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test12RowReversedRange" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test13ColumnReversedRange" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test14ColumnWrongRange" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test15Neighbour" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test16NullableNeighbour" classname="board.TestSquareBoard" time="0.001"/>
+  <testcase name="test17TheSameCell" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test18TheSameCell" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test19TheSameCell" classname="board.TestSquareBoard" time="0.0"/>
+  <testcase name="test20TheSameCell" classname="board.TestSquareBoard" time="0.001"/>
+  <testcase name="test21TheSameCell" classname="board.TestSquareBoard" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

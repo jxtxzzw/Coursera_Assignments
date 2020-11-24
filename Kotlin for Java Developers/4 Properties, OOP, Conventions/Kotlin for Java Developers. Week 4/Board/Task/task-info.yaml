@@ -1,0 +1,449 @@
+type: edu
+files:
+- name: src/board/Board.kt
+  visible: true
+  text: |-
+    package board
+
+    data class Cell(val i: Int, val j: Int) {
+        override fun toString()= "($i, $j)"
+    }
+
+    enum class Direction {
+        UP, DOWN, RIGHT, LEFT;
+
+        fun reversed() = when (this) {
+            UP -> DOWN
+            DOWN -> UP
+            RIGHT -> LEFT
+            LEFT -> RIGHT
+        }
+    }
+
+    interface SquareBoard {
+        val width: Int
+
+        fun getCellOrNull(i: Int, j: Int): Cell?
+        fun getCell(i: Int, j: Int): Cell
+
+        fun getAllCells(): Collection<Cell>
+
+        fun getRow(i: Int, jRange: IntProgression): List<Cell>
+        fun getColumn(iRange: IntProgression, j: Int): List<Cell>
+
+        fun Cell.getNeighbour(direction: Direction): Cell?
+    }
+
+    interface GameBoard<T> : SquareBoard {
+
+        operator fun get(cell: Cell): T?
+        operator fun set(cell: Cell, value: T?)
+
+        fun filter(predicate: (T?) -> Boolean): Collection<Cell>
+        fun find(predicate: (T?) -> Boolean): Cell?
+        fun any(predicate: (T?) -> Boolean): Boolean
+        fun all(predicate: (T?) -> Boolean): Boolean
+    }
+  learner_created: false
+- name: src/board/BoardImpl.kt
+  visible: true
+  placeholders:
+  - offset: 2228
+    length: 965
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 90
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  - offset: 3246
+    length: 20
+    placeholder_text: TODO()
+    initial_state:
+      length: 6
+      offset: 149
+    initialized_from_dependency: false
+    selected: true
+    status: Unchecked
+  text: |+
+    package board
+
+    import board.Direction.*
+
+    fun createSquareBoard(width: Int): SquareBoard = TODO()
+    fun <T> createGameBoard(width: Int): GameBoard<T> = TODO()
+
+  learner_created: false
+- name: test/board/TestGameBoard.kt
+  visible: true
+  text: |-
+    package board
+
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestGameBoard {
+        operator fun <T> GameBoard<T>.get(i: Int, j: Int) = get(getCell(i, j))
+        operator fun <T> GameBoard<T>.set(i: Int, j: Int, value: T) = set(getCell(i, j), value)
+
+        @Test
+        fun test01GetAndSetElement() {
+            val gameBoard = createGameBoard<Char>(2)
+            gameBoard[1, 1] = 'a'
+            Assert.assertEquals('a', gameBoard[1, 1])
+        }
+
+        @Test
+        fun test02Filter() {
+            val gameBoard = createGameBoard<Char>(2)
+            gameBoard[1, 1] = 'a'
+            gameBoard[1, 2] = 'b'
+            val cells = gameBoard.filter { it == 'a' }
+            Assert.assertEquals(1, cells.size)
+            val cell = cells.first()
+            Assert.assertEquals(1, cell.i)
+            Assert.assertEquals(1, cell.j)
+        }
+
+        @Test
+        fun test03All() {
+            val gameBoard = createGameBoard<Char>(2)
+            gameBoard[1, 1] = 'a'
+            gameBoard[1, 2] = 'a'
+            Assert.assertFalse(gameBoard.all { it == 'a' })
+            gameBoard[2, 1] = 'a'
+            gameBoard[2, 2] = 'a'
+            Assert.assertTrue(gameBoard.all { it == 'a' })
+        }
+
+        @Test
+        fun test04Any() {
+            val gameBoard = createGameBoard<Char>(2)
+            gameBoard[1, 1] = 'a'
+            gameBoard[1, 2] = 'b'
+            Assert.assertTrue(gameBoard.any { it in 'a'..'b' })
+            Assert.assertTrue(gameBoard.any { it == null })
+        }
+
+        @Test
+        fun test05TheSameCell() {
+            val gameBoard = createGameBoard<Char>(2)
+            gameBoard[1, 1] = 'a'
+            val cell1 = gameBoard.find { it == 'a' }
+            gameBoard[1, 1] = 'b'
+            val cell2 = gameBoard.find { it == 'b' }
+            Assert.assertEquals(cell1, cell2)
+        }
+
+        @Test
+        fun test06FindReturnsTheSameCell() {
+            val gameBoard = createGameBoard<Char>(2)
+            gameBoard[1, 1] = 'a'
+            val first = gameBoard.find { it == 'a' }
+            val second = gameBoard.getCell(1, 1)
+            Assert.assertTrue("'find' shouldn't recreate the 'Cell' instances.\n" +
+                    "Create only 'width * width' cells; all the functions working with cells\n" +
+                    "should return existing cells instead of creating new ones.",
+                    first === second)
+        }
+
+        @Test
+        fun test07FilterTheSameCell() {
+            val gameBoard = createGameBoard<Char>(2)
+            gameBoard[1, 1] = 'a'
+            val cells = gameBoard.filter { it == 'a' }
+            val first = cells.first()
+            val second = gameBoard.getCell(1, 1)
+            Assert.assertTrue("'filter' shouldn't recreate the 'Cell' instances.\n" +
+                    "Create only 'width * width' cells; all the functions working with cells\n" +
+                    "should return existing cells instead of creating new ones.",
+                    first === second)
+        }
+
+        @Test
+        fun test08AllAny() {
+            val gameBoard = createGameBoard<Int>(2)
+            gameBoard[1, 1] = 1
+            gameBoard[1, 2] = 0
+            gameBoard[2, 1] = 2
+            gameBoard[2, 2] = 3
+            testAllAny(gameBoard)
+        }
+
+        @Test
+        fun test09AllAny() {
+            val gameBoard = createGameBoard<Int>(2)
+            gameBoard[1, 1] = 0
+            gameBoard[1, 2] = 0
+            gameBoard[2, 1] = 0
+            gameBoard[2, 2] = 0
+            testAllAny(gameBoard)
+        }
+
+        @Test
+        fun test10AllAny() {
+            val gameBoard = createGameBoard<Int>(2)
+            gameBoard[1, 1] = 1
+            gameBoard[1, 2] = 2
+            gameBoard[2, 1] = 3
+            gameBoard[2, 2] = 4
+            testAllAny(gameBoard)
+        }
+
+        @Test
+        fun test11AllAny() {
+            val gameBoard = createGameBoard<Int>(2)
+            gameBoard[1, 1] = 0
+            gameBoard[1, 2] = 1
+            gameBoard[2, 2] = 1
+            testAllAny(gameBoard)
+        }
+
+        private fun <T> GameBoard<T>.asString() =
+                (1..width).joinToString("\n") { i ->
+                    (1..width).joinToString(" ") { j ->
+                        "${get(i, j) ?: "-"}"
+                    }
+                }
+
+        private fun testAllAny(gameBoard: GameBoard<Int>) {
+            val allNonZero = gameBoard.all { it != 0 }
+            val anyZero = gameBoard.any { it == 0 }
+            Assert.assertTrue(buildString {
+                appendln("'board.all { it != 0 }' should give the same result as '!board.any { it == 0 }' for the board")
+                appendln(gameBoard.asString())
+            }, allNonZero == !anyZero)
+        }
+    }
+  learner_created: false
+- name: test/board/TestSquareBoard.kt
+  visible: true
+  text: |
+    package board
+
+    import board.Direction.*
+    import org.junit.Assert
+    import org.junit.FixMethodOrder
+    import org.junit.Test
+    import org.junit.runners.MethodSorters
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+    class TestSquareBoard {
+        @Test
+        fun test00AllCells() {
+            val board = createSquareBoard(2)
+            val cells = board.getAllCells().sortedWith(compareBy<Cell> { it.i }.thenBy { it.j })
+            Assert.assertEquals("[(1, 1), (1, 2), (2, 1), (2, 2)]", cells.toString())
+        }
+
+        @Test
+        fun test01Cell() {
+            val board = createSquareBoard(2)
+            val cell = board.getCellOrNull(1, 2)
+            Assert.assertEquals(1, cell?.i)
+            Assert.assertEquals(2, cell?.j)
+        }
+
+        @Test
+        fun test02NoCell() {
+            val board = createSquareBoard(2)
+            val cell = board.getCellOrNull(3, 3)
+            Assert.assertEquals(null, cell)
+        }
+
+        @Test
+        fun test03Row() {
+            val board = createSquareBoard(2)
+            val row = board.getRow(1, 1..2)
+            Assert.assertEquals("[(1, 1), (1, 2)]", row.toString())
+        }
+
+        @Test
+        fun test04RowReversed() {
+            val board = createSquareBoard(2)
+            val row = board.getRow(1, 2 downTo 1)
+            Assert.assertEquals("[(1, 2), (1, 1)]", row.toString())
+        }
+
+        @Test
+        fun test05RowWrongRange() {
+            val board = createSquareBoard(2)
+            val row = board.getRow(1, 1..10)
+            Assert.assertEquals("[(1, 1), (1, 2)]", row.toString())
+        }
+
+        @Test
+        fun test06Neighbour() {
+            val board = createSquareBoard(2)
+            with(board) {
+                val cell = getCellOrNull(1, 1)
+                Assert.assertNotNull(cell)
+                Assert.assertEquals(null, cell!!.getNeighbour(Direction.UP))
+                Assert.assertEquals(null, cell.getNeighbour(Direction.LEFT))
+                Assert.assertEquals("(2, 1)", cell.getNeighbour(Direction.DOWN).toString())
+                Assert.assertEquals("(1, 2)", cell.getNeighbour(Direction.RIGHT).toString())
+            }
+        }
+
+        @Test
+        fun test07AllCells() {
+            val board = createSquareBoard(3)
+            val cells = board.getAllCells().sortedWith(compareBy<Cell> { it.i }.thenBy { it.j })
+            Assert.assertEquals("Wrong result for 'getAllCells()' for the board of width 3.",
+                    "[(1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]",
+                    cells.toString())
+        }
+
+        @Test
+        fun test08Cell() {
+            val board = createSquareBoard(4)
+            val cell = board.getCellOrNull(2, 3)
+            Assert.assertEquals("The board of width 4 should contain the cell (2, 3).",
+                    "(2, 3)", cell.toString())
+        }
+
+        @Test
+        fun test09NoCell() {
+            val board = createSquareBoard(4)
+            val cell = board.getCellOrNull(10, 10)
+            Assert.assertEquals("The board of width 4 should contain the cell (10, 10).", null, cell)
+        }
+
+        @Test
+        fun test10Row() {
+            val row = createSquareBoard(4).getRow(1, 1..2)
+            Assert.assertEquals("Wrong row for 'createSquareBoard(4).getRow(1, 1..2)'.",
+                    "[(1, 1), (1, 2)]", row.toString())
+        }
+
+        @Test
+        fun test11Column() {
+            val row = createSquareBoard(4).getColumn(1..2, 3)
+            Assert.assertEquals("Wrong column for 'createSquareBoard(4).getColumn(1..2, 3)'.",
+                    "[(1, 3), (2, 3)]", row.toString())
+        }
+
+        @Test
+        fun test12RowReversedRange() {
+            val row = createSquareBoard(4).getRow(1, 4 downTo 1)
+            Assert.assertEquals("Wrong column for 'createSquareBoard(4).getRow(1, 4 downTo 1)'.",
+                    "[(1, 4), (1, 3), (1, 2), (1, 1)]", row.toString())
+        }
+
+        @Test
+        fun test13ColumnReversedRange() {
+            val row = createSquareBoard(4).getColumn(2 downTo 1, 3)
+            Assert.assertEquals("Wrong column for 'createSquareBoard(4).getColumn(2 downTo 1, 3)'.",
+                    "[(2, 3), (1, 3)]", row.toString())
+        }
+
+        @Test
+        fun test14ColumnWrongRange() {
+            val row = createSquareBoard(4).getColumn(3..6, 2)
+            Assert.assertEquals("Wrong column for 'createSquareBoard(4).getColumn(3..6, 2)'.",
+                    "[(3, 2), (4, 2)]", row.toString())
+        }
+
+        private fun neighbourMessage(cell: Cell, direction: Direction) =
+                "Wrong neighbour for the cell $cell in a direction $direction."
+
+        @Test
+        fun test15Neighbour() {
+            with(createSquareBoard(4)) {
+                val cell = getCellOrNull(2, 3)
+                Assert.assertNotNull("The board of width 4 should contain the cell (2, 3).", cell)
+                Assert.assertEquals(neighbourMessage(cell!!, UP), "(1, 3)", cell.getNeighbour(UP).toString())
+                Assert.assertEquals(neighbourMessage(cell, DOWN), "(3, 3)", cell.getNeighbour(DOWN).toString())
+                Assert.assertEquals(neighbourMessage(cell, LEFT), "(2, 2)", cell.getNeighbour(LEFT).toString())
+                Assert.assertEquals(neighbourMessage(cell, RIGHT), "(2, 4)", cell.getNeighbour(RIGHT).toString())
+            }
+        }
+
+        @Test
+        fun test16NullableNeighbour() {
+            with(createSquareBoard(4)) {
+                val cell = getCellOrNull(4, 4)
+                Assert.assertNotNull("The board of width 4 should contain the cell (4, 4).", cell)
+                Assert.assertEquals(neighbourMessage(cell!!, UP), "(3, 4)", cell.getNeighbour(UP).toString())
+                Assert.assertEquals(neighbourMessage(cell, LEFT), "(4, 3)", cell.getNeighbour(LEFT).toString())
+                Assert.assertEquals(neighbourMessage(cell, DOWN), null, cell.getNeighbour(DOWN))
+                Assert.assertEquals(neighbourMessage(cell, RIGHT), null, cell.getNeighbour(RIGHT))
+            }
+        }
+
+        @Test
+        fun test17TheSameCell() {
+            val board = createSquareBoard(4)
+            val first = board.getCell(1, 2)
+            val second = board.getCellOrNull(1, 2)
+            Assert.assertTrue("'getCell' and 'getCellOrNull' should return the same 'Cell' instances.\n" +
+                    "Create only 'width * width' cells; all the functions working with cells " +
+                    "should return existing cells instead of creating new ones.",
+                    first === second)
+        }
+
+        @Test
+        fun test18TheSameCell() {
+            val board = createSquareBoard(1)
+            val first = board.getAllCells().first()
+            val second = board.getCell(1, 1)
+            Assert.assertTrue("'getAllCells' and 'getCell' should return the same 'Cell' instances.\n" +
+                    "Create only 'width * width' cells; all the functions working with cells " +
+                    "should return existing cells instead of creating new ones.",
+                    first === second)
+        }
+
+        @Test
+        fun test19TheSameCell() {
+            val board = createSquareBoard(4)
+            val cell = board.getCell(1, 1)
+            val first = board.run { cell.getNeighbour(RIGHT) }
+            val second = board.getCell(1, 2)
+            Assert.assertTrue("'getNeighbour' shouldn't recreate the 'Cell' instance.\n" +
+                    "Create only 'width * width' cells; all the functions working with cells " +
+                    "should return existing cells instead of creating new ones.",
+                    first === second)
+        }
+
+        @Test
+        fun test20TheSameCell() {
+            val board = createSquareBoard(2)
+            val row = board.getRow(1, 1..1)
+            val first = row[0]
+            val second = board.getCell(1, 1)
+            Assert.assertTrue("'getRow' shouldn't recreate the 'Cell' instances.\n" +
+                    "Create only 'width * width' cells; all the functions working with cells " +
+                    "should return existing cells instead of creating new ones.",
+                    first === second)
+        }
+
+        @Test
+        fun test21TheSameCell() {
+            val board = createSquareBoard(2)
+            val column = board.getColumn(1..1, 2)
+            val first = column[0]
+            val second = board.getCell(1, 2)
+            Assert.assertTrue("'getColumn' shouldn't recreate the 'Cell' instances.\n" +
+                    "Create only 'width * width' cells; all the functions working with cells " +
+                    "should return existing cells instead of creating new ones.",
+                    first === second)
+        }
+    }
+  learner_created: false
+- name: partId
+  visible: false
+  learner_created: false
+- name: assignmentKey
+  visible: false
+  learner_created: false
+feedback_link: https://www.coursera.org/learn/kotlin-for-java-developers/programming/7fkLn/board/discussions
+status: Unchecked
+feedback:
+  message: <html>Submission successful, please <a href="https://www.coursera.org/learn/kotlin-for-java-developers/programming/7fkLn/board/submission">check
+    the status on Coursera</a></html>
+  time: Tue, 24 Nov 2020 05:20:10 UTC
+record: -1

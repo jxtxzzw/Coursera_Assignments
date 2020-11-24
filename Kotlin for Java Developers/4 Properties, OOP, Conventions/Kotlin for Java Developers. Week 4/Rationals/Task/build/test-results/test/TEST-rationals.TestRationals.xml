@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="rationals.TestRationals" tests="43" skipped="0" failures="0" errors="0" timestamp="2020-11-23T09:10:46" hostname="LAPTOP-JQEH2B7G" time="0.081">
+  <properties/>
+  <testcase name="test0Sample9InRange" classname="rationals.TestRationals" time="0.007"/>
+  <testcase name="test0Sample3Product" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test4InRange0" classname="rationals.TestRationals" time="0.013"/>
+  <testcase name="test4InRange1" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test4InRange2" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test4InRange3" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test4InRange4" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test4InRange5" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test4InRange6" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test0Sample10Long" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison10" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test0Sample1Sum" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test0Sample5Negation" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test0Sample4Quotient" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test1Normalized0" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test1Normalized1" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test1Normalized2" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test1Normalized3" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test1Normalized4" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test1Normalized5" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison0" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison1" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test3Comparison2" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison3" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test3Comparison4" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison5" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison6" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison7" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison8" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test3Comparison9" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test0Sample8Comparison" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test0Sample11BigInteger" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test0Sample2Difference" classname="rationals.TestRationals" time="0.0"/>
+  <testcase name="test0Sample6Integer" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test2Arithmetic0" classname="rationals.TestRationals" time="0.017"/>
+  <testcase name="test2Arithmetic1" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test2Arithmetic2" classname="rationals.TestRationals" time="0.004"/>
+  <testcase name="test2Arithmetic3" classname="rationals.TestRationals" time="0.001"/>
+  <testcase name="test2Arithmetic4" classname="rationals.TestRationals" time="0.005"/>
+  <testcase name="test2Arithmetic5" classname="rationals.TestRationals" time="0.003"/>
+  <testcase name="test2Arithmetic6" classname="rationals.TestRationals" time="0.002"/>
+  <testcase name="test2Arithmetic7" classname="rationals.TestRationals" time="0.004"/>
+  <testcase name="test0Sample7NormalizedForm" classname="rationals.TestRationals" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

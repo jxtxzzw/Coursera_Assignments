@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Kotlin_for_Java_Developers._Week_4.iml" filepath="$PROJECT_DIR$/.idea/modules/Kotlin_for_Java_Developers._Week_4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Board/Task/Kotlin_for_Java_Developers._Week_4.Board-Task.iml" filepath="$PROJECT_DIR$/.idea/modules/Board/Task/Kotlin_for_Java_Developers._Week_4.Board-Task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Board/Task/Kotlin_for_Java_Developers._Week_4.Board-Task.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Board/Task/Kotlin_for_Java_Developers._Week_4.Board-Task.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Board/Task/Kotlin_for_Java_Developers._Week_4.Board-Task.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Board/Task/Kotlin_for_Java_Developers._Week_4.Board-Task.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Rationals/Task/Kotlin_for_Java_Developers._Week_4.Rationals-Task.iml" filepath="$PROJECT_DIR$/.idea/modules/Rationals/Task/Kotlin_for_Java_Developers._Week_4.Rationals-Task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Rationals/Task/Kotlin_for_Java_Developers._Week_4.Rationals-Task.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Rationals/Task/Kotlin_for_Java_Developers._Week_4.Rationals-Task.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Rationals/Task/Kotlin_for_Java_Developers._Week_4.Rationals-Task.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Rationals/Task/Kotlin_for_Java_Developers._Week_4.Rationals-Task.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Kotlin_for_Java_Developers._Week_4.util.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Kotlin_for_Java_Developers._Week_4.util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Kotlin_for_Java_Developers._Week_4.util.main.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Kotlin_for_Java_Developers._Week_4.util.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/Kotlin_for_Java_Developers._Week_4.util.test.iml" filepath="$PROJECT_DIR$/.idea/modules/util/Kotlin_for_Java_Developers._Week_4.util.test.iml" />
+    </modules>
+  </component>
+</project>
