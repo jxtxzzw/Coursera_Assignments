@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="games.board.TestSquareBoard" tests="22" skipped="0" failures="0" errors="0" timestamp="2020-12-08T12:49:36" hostname="LAPTOP-JQEH2B7G" time="0.033">
+  <properties/>
+  <testcase name="test00AllCells" classname="games.board.TestSquareBoard" time="0.019"/>
+  <testcase name="test01Cell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test02NoCell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test03Row" classname="games.board.TestSquareBoard" time="0.004"/>
+  <testcase name="test04RowReversed" classname="games.board.TestSquareBoard" time="0.001"/>
+  <testcase name="test05RowWrongRange" classname="games.board.TestSquareBoard" time="0.001"/>
+  <testcase name="test06Neighbour" classname="games.board.TestSquareBoard" time="0.001"/>
+  <testcase name="test07AllCells" classname="games.board.TestSquareBoard" time="0.002"/>
+  <testcase name="test08Cell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test09NoCell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test10Row" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test11Column" classname="games.board.TestSquareBoard" time="0.001"/>
+  <testcase name="test12RowReversedRange" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test13ColumnReversedRange" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test14ColumnWrongRange" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test15Neighbour" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test16NullableNeighbour" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test17TheSameCell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test18TheSameCell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test19TheSameCell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test20TheSameCell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <testcase name="test21TheSameCell" classname="games.board.TestSquareBoard" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

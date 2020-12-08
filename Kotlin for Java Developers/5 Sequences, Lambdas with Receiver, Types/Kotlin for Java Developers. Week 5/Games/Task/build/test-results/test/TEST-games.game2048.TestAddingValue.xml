@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="games.game2048.TestAddingValue" tests="4" skipped="0" failures="0" errors="0" timestamp="2020-12-08T12:49:36" hostname="LAPTOP-JQEH2B7G" time="0.029">
+  <properties/>
+  <testcase name="test1" classname="games.game2048.TestAddingValue" time="0.027"/>
+  <testcase name="test2" classname="games.game2048.TestAddingValue" time="0.001"/>
+  <testcase name="test3" classname="games.game2048.TestAddingValue" time="0.0"/>
+  <testcase name="test4" classname="games.game2048.TestAddingValue" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

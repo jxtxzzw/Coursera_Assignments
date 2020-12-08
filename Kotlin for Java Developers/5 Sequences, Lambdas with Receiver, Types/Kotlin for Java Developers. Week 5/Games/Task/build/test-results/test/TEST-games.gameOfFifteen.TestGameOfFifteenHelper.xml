@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="games.gameOfFifteen.TestGameOfFifteenHelper" tests="35" skipped="0" failures="0" errors="0" timestamp="2020-12-08T12:49:36" hostname="LAPTOP-JQEH2B7G" time="0.034">
+  <properties/>
+  <testcase name="testEven0" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testEven1" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven2" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven3" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven4" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven5" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testEven6" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.002"/>
+  <testcase name="testEven7" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven8" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testEven9" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd10" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd11" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd12" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd13" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testOdd14" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.002"/>
+  <testcase name="testOdd15" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd16" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testStart" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testOdd0" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd1" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd2" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testOdd3" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.001"/>
+  <testcase name="testOdd4" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd5" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.003"/>
+  <testcase name="testOdd6" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd7" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd8" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testOdd9" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven10" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven11" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven12" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven13" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven14" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven15" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <testcase name="testEven16" classname="games.gameOfFifteen.TestGameOfFifteenHelper" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

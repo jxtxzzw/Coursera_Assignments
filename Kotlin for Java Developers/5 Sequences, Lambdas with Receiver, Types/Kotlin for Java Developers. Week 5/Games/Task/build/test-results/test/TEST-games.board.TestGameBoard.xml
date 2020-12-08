@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="games.board.TestGameBoard" tests="11" skipped="0" failures="0" errors="0" timestamp="2020-12-08T12:49:36" hostname="LAPTOP-JQEH2B7G" time="0.049">
+  <properties/>
+  <testcase name="test01GetAndSetElement" classname="games.board.TestGameBoard" time="0.006"/>
+  <testcase name="test02Filter" classname="games.board.TestGameBoard" time="0.014"/>
+  <testcase name="test03All" classname="games.board.TestGameBoard" time="0.002"/>
+  <testcase name="test04Any" classname="games.board.TestGameBoard" time="0.005"/>
+  <testcase name="test05TheSameCell" classname="games.board.TestGameBoard" time="0.001"/>
+  <testcase name="test06FindReturnsTheSameCell" classname="games.board.TestGameBoard" time="0.001"/>
+  <testcase name="test07FilterTheSameCell" classname="games.board.TestGameBoard" time="0.001"/>
+  <testcase name="test08AllAny" classname="games.board.TestGameBoard" time="0.017"/>
+  <testcase name="test09AllAny" classname="games.board.TestGameBoard" time="0.0"/>
+  <testcase name="test10AllAny" classname="games.board.TestGameBoard" time="0.0"/>
+  <testcase name="test11AllAny" classname="games.board.TestGameBoard" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

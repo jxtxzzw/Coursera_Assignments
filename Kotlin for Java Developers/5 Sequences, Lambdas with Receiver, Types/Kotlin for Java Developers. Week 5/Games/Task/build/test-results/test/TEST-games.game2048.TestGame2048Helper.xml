@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="games.game2048.TestGame2048Helper" tests="18" skipped="0" failures="0" errors="0" timestamp="2020-12-08T12:49:36" hostname="LAPTOP-JQEH2B7G" time="0.006">
+  <properties/>
+  <testcase name="test01SimpleMove1" classname="games.game2048.TestGame2048Helper" time="0.002"/>
+  <testcase name="test02SimpleMove2" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test03SimpleMove3" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test04SimpleMerge1" classname="games.game2048.TestGame2048Helper" time="0.001"/>
+  <testcase name="test05SimpleMerge2" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test06SimpleMerge3" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test07SimpleMerge4" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test08SimpleMerge5" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test09SimpleMerge6" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test10MergeWithExtraElement1" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test11MergeWithExtraElement2" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test12MergeWithExtraElement3" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test13NoMerge1" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test14NoMerge2" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test15MergeInFull1" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test16MergeInFull2" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test17MergeOfThree1" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <testcase name="test18MergeOfThree2" classname="games.game2048.TestGame2048Helper" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
