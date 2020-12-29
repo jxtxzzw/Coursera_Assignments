@@ -1,0 +1,6 @@
+list-nth-mod: Incorrect implementation for n=0 (Result of (list-nth-mod (quote (-5)) 0) was expected to equal -5) [incorrect answer]
+list-nth-mod: Exception for empty list (No exception raised) [incorrect answer]
+
+Because the auto-grader gave a score above 80, here is the link to a message from a very cute dog: https://drive.google.com/file/d/0B5sUgbs6aDNpSWhSZzVtcktDaTA/view?pref=2&pli=1
+
+With extra credit you received 102.0%!  Grade capped at 100%

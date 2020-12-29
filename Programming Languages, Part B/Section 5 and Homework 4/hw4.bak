@@ -1,0 +1,56 @@
+
+#lang racket
+
+(provide (all-defined-out)) ;; so we can put tests in a second file
+
+;; put your code below
+
+(define (sequence low high stride)
+  (if (> low high)
+      null
+      (cons low
+            (sequence (+ low stride) high stride))))
+
+
+(define (string-append-map xs suffix)
+  (map (lambda (x) (string-append x suffix)) xs))
+
+
+(define (ith xs i)
+  (if (= i 0)
+      (car xs)
+      (ith (cdr xs) (- i 1))))
+
+(define (list-nth-mod xs n)
+  (cond [(null? xs) error "list-nth-mod: empty list"]
+        [(< (car xs) 0) error "list-nth-mod: negative number"]
+        [#t (ith xs (remainder n (length xs)))]))
+
+
+(define (stream-for-n-steps s n)
+  (if (= n 0)
+      null
+      (cons (car (s)) (stream-for-n-steps (cdr (s)) (- n 1)))))
+
+
+(define (stream-maker f g args)
+  (letrec ([fn (lambda (x) (cons (f x) (lambda () (fn (g x)))))])
+    (lambda () (fn args))))
+
+
+(define funny-number-stream
+  (stream-maker (lambda (x)
+                  (if (= (remainder x 5) 0)
+                      (- 0 x)
+                      x))
+                (lambda (x)
+                  (+ x 1))
+                1))
+
+(define dan-then-dog
+  (stream-maker (lambda (x) x)
+                (lambda (x)
+                  (if (string=? x "dan.jpg")
+                      "dog.jpg"
+                      "dan.jpg"))
+                "dan.jpg"))
