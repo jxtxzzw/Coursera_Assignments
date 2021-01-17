@@ -1,0 +1,6 @@
+ifeq: resulting expression evaluates to e3 if e1 and e2 evaluate to equal integers (found e4 to be evaluated) [incorrect answer]
+compute-free-vars: correctly computes free vars [incorrect answer]
+compute-free-vars: no free vars case [incorrect answer]
+eval-under-env-c: correctly filters closure environments [incorrect answer]
+
+Because the auto-grader gave a score above 80, here is the link to a message from a very cute dog: https://drive.google.com/file/d/0B5sUgbs6aDNpWUx4aVhzQXEwWXM/view?pref=2&pli=1
