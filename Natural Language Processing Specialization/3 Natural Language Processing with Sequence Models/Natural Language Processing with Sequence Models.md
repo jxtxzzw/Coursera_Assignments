@@ -63,3 +63,26 @@ GRU 可以控制从之前的数据中忘记哪些信息，以及从现在的数�
 
 
 
+RNN 有梯度消失的问题
+
+
+
+LSTM 是解决方案之一
+
+
+
+LSTM 使用一系列的门来决定哪些信息需要保存：
+
++ Forget 门决定哪些要保持
++ Input 门决定哪些要增加
++ Output 门决定下一个隐藏状态会是什么
++ 
+
+
+
+NER locates and extracts predefined entities from text
+
+
+
+![](https://img.jxtxzzw.com/2021/02/06/3z0ryc.png)
+
