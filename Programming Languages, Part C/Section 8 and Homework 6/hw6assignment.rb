@@ -60,7 +60,7 @@ class MyBoard < Board
     locations = @current_block.current_rotation
     displacement = @current_block.position
     # to override store_current in MyBoard because the provided code is broken if a Tetris piece does not have exactly 4 blocks in it.
-    (0...(@current_block.num_blocks)).each{|index| 
+    (0..(locations.size - 1)).each{|index| 
       current = locations[index];
       @grid[current[1]+displacement[1]][current[0]+displacement[0]] =  @current_pos[index]
     }
